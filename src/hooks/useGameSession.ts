@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { playSfx } from '../audio/sfx'
 import { normalizeTime, timeEquals, timeToDigits } from '../clock/time'
 import type { ClockTime } from '../clock/time'
+import { initialAdaptive } from '../game/adaptive'
 import { applyAnswer, initialSession } from '../game/progress'
 import { nextPrompt } from '../game/promptEngine'
 import { stageLabelKey } from '../game/stages'
@@ -42,6 +43,7 @@ export type GameSession = {
   selectOption: (t: ClockTime) => void
   checkSet: () => void
   toggleMute: () => void
+  selectStage: (stage: StageId) => void
   dismissFeedbackAndContinue: () => void
 }
 
@@ -144,6 +146,21 @@ export function useGameSession(): GameSession {
     commit({ ...g, session: { ...g.session, muted: !g.session.muted } })
   }, [commit])
 
+  const selectStage = useCallback(
+    (stage: StageId) => {
+      const g = gameRef.current
+      const session: SessionState = {
+        ...g.session,
+        stage,
+        starsInStage: 0,
+        adaptive: initialAdaptive(),
+        lastPromptKind: null,
+      }
+      commit({ ...startPrompt(session), feedback: null, lastChoice: null })
+    },
+    [commit],
+  )
+
   const dismissFeedbackAndContinue = useCallback(() => {
     const g = gameRef.current
     const fb = g.feedback
@@ -200,6 +217,7 @@ export function useGameSession(): GameSession {
     selectOption,
     checkSet,
     toggleMute,
+    selectStage,
     dismissFeedbackAndContinue,
   }
 }

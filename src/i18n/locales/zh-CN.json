@@ -13,7 +13,11 @@
   "a11y": {
     "clock": "指针时钟",
     "language": "语言",
-    "stars": "{{count}} 颗星"
+    "stars": "{{count}} 颗星",
+    "stage": "阶段",
+    "stageProgress": "解锁还需 {{current}}/{{goal}} 颗星",
+    "day": "白天",
+    "night": "夜晚"
   },
   "feedback": {
     "correct": "太棒了！",

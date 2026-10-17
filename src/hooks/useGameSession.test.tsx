@@ -75,6 +75,19 @@ describe('useGameSession', () => {
     expect(seenSessions[1].totalStars).toBe(1)
   })
 
+  it('selectStage jumps stage and resets stars and adaptive state', () => {
+    prompts = [read(2), set(4)]
+    const { result } = renderHook(() => useGameSession())
+    act(() => result.current.selectOption({ hours: 2, minutes: 0 }))
+    expect(result.current.session.starsInStage).toBe(1)
+    act(() => result.current.selectStage('quarter'))
+    expect(result.current.session.stage).toBe('quarter')
+    expect(result.current.session.starsInStage).toBe(0)
+    expect(result.current.session.adaptive.recent).toEqual([])
+    expect(result.current.feedback).toBeNull()
+    expect(result.current.prompt.kind).toBe('set')
+  })
+
   it('wrong read answer gives no star and ignores further input during feedback', () => {
     prompts = [read(2)]
     const { result } = renderHook(() => useGameSession())
