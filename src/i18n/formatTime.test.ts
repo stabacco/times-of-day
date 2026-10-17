@@ -80,4 +80,10 @@ describe('formatTimePhrase', () => {
   it('uses English for unsupported locales', () => {
     expect(formatTimePhrase({ hours: 3, minutes: 0 }, 'ja')).toBe("three o'clock")
   })
+
+  it('ignores prototype keys like constructor and falls back to English', () => {
+    const result = formatTimePhrase({ hours: 3, minutes: 0 }, 'constructor')
+    expect(typeof result).toBe('string')
+    expect(result).toBe("three o'clock")
+  })
 })

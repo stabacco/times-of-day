@@ -87,10 +87,10 @@ const zh: Phraser = (h, m) => {
 const PHRASERS: Record<string, Phraser> = { en, es, fr, it, de, pt, 'zh-CN': zh }
 
 function resolveLocale(locale: string): string {
-  if (locale in PHRASERS) return locale
+  if (Object.hasOwn(PHRASERS, locale)) return locale
   const base = locale.split('-')[0].toLowerCase()
   if (base === 'zh') return 'zh-CN'
-  return base in PHRASERS ? base : 'en'
+  return Object.hasOwn(PHRASERS, base) ? base : 'en'
 }
 
 export function formatTimePhrase(t: ClockTime, locale: string): string {
