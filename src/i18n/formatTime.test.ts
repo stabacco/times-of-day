@@ -3,26 +3,26 @@ import { formatTimePhrase } from './formatTime'
 
 describe('formatTimePhrase', () => {
   describe('en', () => {
-    it("formats o'clock", () => {
-      expect(formatTimePhrase({ hours: 3, minutes: 0 }, 'en')).toBe("three o'clock")
-      expect(formatTimePhrase({ hours: 12, minutes: 0 }, 'en')).toBe("twelve o'clock")
+    it("formats o'clock with hour numerals", () => {
+      expect(formatTimePhrase({ hours: 3, minutes: 0 }, 'en')).toBe("3 o'clock")
+      expect(formatTimePhrase({ hours: 12, minutes: 0 }, 'en')).toBe("12 o'clock")
     })
     it('formats half past', () => {
-      expect(formatTimePhrase({ hours: 3, minutes: 30 }, 'en')).toBe('half past three')
+      expect(formatTimePhrase({ hours: 4, minutes: 30 }, 'en')).toBe('half past 4')
     })
-    it('formats quarter past and quarter to', () => {
-      expect(formatTimePhrase({ hours: 3, minutes: 15 }, 'en')).toBe('quarter past three')
-      expect(formatTimePhrase({ hours: 3, minutes: 45 }, 'en')).toBe('quarter to four')
-      expect(formatTimePhrase({ hours: 12, minutes: 45 }, 'en')).toBe('quarter to one')
+    it('formats a quarter past and a quarter to', () => {
+      expect(formatTimePhrase({ hours: 5, minutes: 15 }, 'en')).toBe('a quarter past 5')
+      expect(formatTimePhrase({ hours: 3, minutes: 45 }, 'en')).toBe('a quarter to 4')
+      expect(formatTimePhrase({ hours: 12, minutes: 45 }, 'en')).toBe('a quarter to 1')
     })
     it('formats minutes past and to', () => {
-      expect(formatTimePhrase({ hours: 3, minutes: 5 }, 'en')).toBe('five minutes past three')
-      expect(formatTimePhrase({ hours: 3, minutes: 50 }, 'en')).toBe('ten minutes to four')
-      expect(formatTimePhrase({ hours: 3, minutes: 1 }, 'en')).toBe('one minute past three')
-      expect(formatTimePhrase({ hours: 3, minutes: 59 }, 'en')).toBe('one minute to four')
+      expect(formatTimePhrase({ hours: 3, minutes: 5 }, 'en')).toBe('5 minutes past 3')
+      expect(formatTimePhrase({ hours: 3, minutes: 50 }, 'en')).toBe('10 minutes to 4')
+      expect(formatTimePhrase({ hours: 3, minutes: 1 }, 'en')).toBe('1 minute past 3')
+      expect(formatTimePhrase({ hours: 3, minutes: 59 }, 'en')).toBe('1 minute to 4')
     })
     it('accepts regional variants', () => {
-      expect(formatTimePhrase({ hours: 3, minutes: 30 }, 'en-AU')).toBe('half past three')
+      expect(formatTimePhrase({ hours: 3, minutes: 30 }, 'en-AU')).toBe('half past 3')
     })
   })
 
@@ -78,12 +78,12 @@ describe('formatTimePhrase', () => {
   })
 
   it('uses English for unsupported locales', () => {
-    expect(formatTimePhrase({ hours: 3, minutes: 0 }, 'ja')).toBe("three o'clock")
+    expect(formatTimePhrase({ hours: 3, minutes: 0 }, 'ja')).toBe("3 o'clock")
   })
 
   it('ignores prototype keys like constructor and falls back to English', () => {
     const result = formatTimePhrase({ hours: 3, minutes: 0 }, 'constructor')
     expect(typeof result).toBe('string')
-    expect(result).toBe("three o'clock")
+    expect(result).toBe("3 o'clock")
   })
 })

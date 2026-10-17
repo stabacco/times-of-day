@@ -1,6 +1,9 @@
 import styled, { css } from 'styled-components'
+import { useTranslation } from 'react-i18next'
 import { timeEquals, timeToDigits } from '../clock/time'
 import type { ClockTime } from '../clock/time'
+import type { TimeLabelStyle } from '../game/types'
+import { formatTimePhrase } from '../i18n/formatTime'
 
 export interface AnswerChoicesProps {
   options: ClockTime[]
@@ -8,6 +11,7 @@ export interface AnswerChoicesProps {
   /** The option the player picked; set once feedback is showing. */
   chosen: ClockTime | null
   disabled: boolean
+  labelStyle: TimeLabelStyle
   onSelect: (t: ClockTime) => void
 }
 
@@ -21,16 +25,17 @@ const Grid = styled.div`
   max-width: 100%;
 `
 
-const Choice = styled.button<{ $outcome: Outcome }>`
+const Choice = styled.button<{ $outcome: Outcome; $phrase: boolean }>`
   min-height: 56px; /* >= 48px touch target */
-  padding: 0.5rem 1rem;
+  padding: 0.5rem 0.75rem;
   border: 3px solid ${({ theme }) => theme.colors.clockRim};
   border-radius: ${({ theme }) => theme.radii.button};
   background: ${({ theme }) => theme.colors.white};
   color: ${({ theme }) => theme.colors.ink};
   font-family: ${({ theme }) => theme.fonts.display};
   font-weight: 700;
-  font-size: 1.75rem;
+  font-size: ${({ $phrase }) => ($phrase ? '1.15rem' : '1.75rem')};
+  line-height: 1.2;
   font-variant-numeric: tabular-nums;
   cursor: pointer;
 
@@ -63,11 +68,31 @@ const Choice = styled.button<{ $outcome: Outcome }>`
     `}
 `
 
-export function AnswerChoices({ options, target, chosen, disabled, onSelect }: AnswerChoicesProps) {
+function labelFor(time: ClockTime, style: TimeLabelStyle, locale: string): string {
+  const digits = timeToDigits(time)
+  if (style !== 'phrase') return digits
+  const phrase = formatTimePhrase(time, locale)
+  return phrase
+}
+
+export function AnswerChoices({
+  options,
+  target,
+  chosen,
+  disabled,
+  labelStyle,
+  onSelect,
+}: AnswerChoicesProps) {
+  const { i18n } = useTranslation()
+  const locale = i18n.resolvedLanguage ?? i18n.language
+  const usePhrase = labelStyle === 'phrase'
+
   return (
     <Grid>
       {options.map((option) => {
         const digits = timeToDigits(option)
+        const label = labelFor(option, labelStyle, locale)
+        const phraseLabel = usePhrase && label !== digits
         let outcome: Outcome = null
         if (chosen) {
           if (timeEquals(option, target)) outcome = 'correct'
@@ -79,9 +104,10 @@ export function AnswerChoices({ options, target, chosen, disabled, onSelect }: A
             type="button"
             disabled={disabled}
             $outcome={outcome}
+            $phrase={phraseLabel}
             onClick={() => onSelect(option)}
           >
-            {digits}
+            {label}
           </Choice>
         )
       })}

@@ -29,11 +29,17 @@ describe('GameScreen', () => {
     expect(stars).toHaveTextContent('0')
 
     const user = userEvent.setup()
-    const choices = screen.queryAllByRole('button', { name: /^\d+:\d\d$/ })
-    if (choices.length > 0) {
-      await user.click(choices[0])
+    const check = screen.queryByRole('button', { name: /check/i })
+    if (check) {
+      await user.click(check)
     } else {
-      await user.click(screen.getByRole('button', { name: /check/i }))
+      // Read choices may be digits ("3:00") or phrases ("a quarter past 5").
+      const choices = screen
+        .getAllByRole('button')
+        .filter((b) => !/mute|unmute|sound|language/i.test(b.getAttribute('aria-label') ?? ''))
+        .filter((b) => b.getAttribute('aria-pressed') === null)
+      expect(choices.length).toBeGreaterThan(0)
+      await user.click(choices[0])
     }
     expect(screen.getByRole('status')).not.toBeEmptyDOMElement()
 

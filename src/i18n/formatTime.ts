@@ -3,21 +3,15 @@ import type { ClockTime } from '../clock/time'
 
 type Phraser = (hour: number, minutes: number, nextHour: number) => string | null
 
-const EN_WORDS = [
-  'zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten',
-  'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen',
-  'eighteen', 'nineteen', 'twenty', 'twenty-one', 'twenty-two', 'twenty-three',
-  'twenty-four', 'twenty-five', 'twenty-six', 'twenty-seven', 'twenty-eight', 'twenty-nine',
-]
-
+/** School-style English with hour numerals: "a quarter past 5", "half past 4". */
 const en: Phraser = (h, m, next) => {
-  if (m === 0) return `${EN_WORDS[h]} o'clock`
-  if (m === 15) return `quarter past ${EN_WORDS[h]}`
-  if (m === 30) return `half past ${EN_WORDS[h]}`
-  if (m === 45) return `quarter to ${EN_WORDS[next]}`
-  if (m < 30) return `${EN_WORDS[m]} minute${m === 1 ? '' : 's'} past ${EN_WORDS[h]}`
+  if (m === 0) return `${h} o'clock`
+  if (m === 15) return `a quarter past ${h}`
+  if (m === 30) return `half past ${h}`
+  if (m === 45) return `a quarter to ${next}`
+  if (m < 30) return `${m} minute${m === 1 ? '' : 's'} past ${h}`
   const to = 60 - m
-  return `${EN_WORDS[to]} minute${to === 1 ? '' : 's'} to ${EN_WORDS[next]}`
+  return `${to} minute${to === 1 ? '' : 's'} to ${next}`
 }
 
 const ES_WORDS = ['', 'una', 'dos', 'tres', 'cuatro', 'cinco', 'seis', 'siete', 'ocho', 'nueve', 'diez', 'once', 'doce']
@@ -86,14 +80,15 @@ const zh: Phraser = (h, m) => {
 
 const PHRASERS: Record<string, Phraser> = { en, es, fr, it, de, pt, 'zh-CN': zh }
 
-function resolveLocale(locale: string): string {
+function resolveLocale(locale: string | undefined | null): string {
+  if (!locale || typeof locale !== 'string') return 'en'
   if (Object.hasOwn(PHRASERS, locale)) return locale
   const base = locale.split('-')[0].toLowerCase()
   if (base === 'zh') return 'zh-CN'
   return Object.hasOwn(PHRASERS, base) ? base : 'en'
 }
 
-export function formatTimePhrase(t: ClockTime, locale: string): string {
+export function formatTimePhrase(t: ClockTime, locale?: string | null): string {
   const n = normalizeTime(t)
   const next = n.hours === 12 ? 1 : n.hours + 1
   const phrase = PHRASERS[resolveLocale(locale)](n.hours, n.minutes, next)

@@ -186,4 +186,13 @@ describe('nextPrompt', () => {
     const p = nextPrompt(s, () => 0.1)
     expect(p.kind).toBe('set')
   })
+
+  it('sometimes prefers phrase labels and sometimes digits', () => {
+    const styles = new Set<string>()
+    for (let i = 0; i < 40; i++) {
+      styles.add(nextPrompt(session('quarter', 1), seeded(i + 900)).labelStyle)
+    }
+    expect(styles.has('phrase')).toBe(true)
+    expect(styles.has('digits')).toBe(true)
+  })
 })

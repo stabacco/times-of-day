@@ -17,13 +17,38 @@ describe('PromptBanner', () => {
       await act(() => i18n.changeLanguage(lng))
       render(
         <ThemeProvider theme={theme}>
-          <PromptBanner prompt={{ kind: 'set', target: { hours: 4, minutes: 23 }, snapStep: 1 }} />
+          <PromptBanner
+            prompt={{
+              kind: 'set',
+              target: { hours: 4, minutes: 23 },
+              snapStep: 1,
+              labelStyle: 'digits',
+            }}
+          />
         </ThemeProvider>,
       )
       expect(screen.getByText(/4:23/)).toBeInTheDocument()
       await act(() => i18n.changeLanguage('en'))
     },
   )
+
+  it('set prompt can lead with a spoken phrase and still show digits', async () => {
+    await act(() => i18n.changeLanguage('en'))
+    render(
+      <ThemeProvider theme={theme}>
+        <PromptBanner
+          prompt={{
+            kind: 'set',
+            target: { hours: 5, minutes: 15 },
+            snapStep: 15,
+            labelStyle: 'phrase',
+          }}
+        />
+      </ThemeProvider>,
+    )
+    expect(screen.getByText(/a quarter past 5/i)).toBeInTheDocument()
+    expect(screen.getByText('5:15')).toBeInTheDocument()
+  })
 
   it('syncs document lang on language change', async () => {
     await act(() => i18n.changeLanguage('fr'))

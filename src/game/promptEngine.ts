@@ -93,6 +93,9 @@ export function nextPrompt(session: SessionState, rng: Rng = Math.random): Promp
   const target = randomLegalTime(stage, rng)
   const snapStep = minuteStepForStage(stage)
 
+  // ~half the prompts use spoken-style labels (quarter past, half past, …).
+  const labelStyle = rng() < 0.5 ? 'phrase' : 'digits'
+
   if (kind === 'read') {
     const optionCount = difficulty === 0 ? 3 : 4
     const distractors = buildDistractors(target, stage, difficulty, optionCount - 1, rng)
@@ -101,6 +104,7 @@ export function nextPrompt(session: SessionState, rng: Rng = Math.random): Promp
       target,
       options: shuffle([target, ...distractors], rng),
       snapStep,
+      labelStyle,
     }
   }
 
@@ -109,5 +113,6 @@ export function nextPrompt(session: SessionState, rng: Rng = Math.random): Promp
     target,
     showHint: difficulty === 0,
     snapStep,
+    labelStyle,
   }
 }

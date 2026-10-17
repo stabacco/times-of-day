@@ -35,9 +35,20 @@ export function PromptBanner({ prompt }: { prompt: Prompt }) {
       </Banner>
     )
   }
-  // Set prompts always lead with digits; the written phrase is secondary.
+
   const digits = timeToDigits(prompt.target)
-  const phrase = formatTimePhrase(prompt.target, i18n.language)
+  const phrase = formatTimePhrase(prompt.target, i18n.resolvedLanguage ?? i18n.language)
+  const preferPhrase = prompt.labelStyle === 'phrase' && phrase !== digits
+
+  if (preferPhrase) {
+    return (
+      <Banner aria-live="polite">
+        <Line>{t('prompt.set', { time: phrase })}</Line>
+        <Secondary>{digits}</Secondary>
+      </Banner>
+    )
+  }
+
   return (
     <Banner aria-live="polite">
       <Line>{t('prompt.set', { time: digits })}</Line>
