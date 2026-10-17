@@ -7,7 +7,12 @@
   "actions": {
     "check": "Vérifier",
     "mute": "Couper le son",
-    "unmute": "Activer le son"
+    "unmute": "Activer le son",
+    "sound": "Son"
+  },
+  "a11y": {
+    "language": "Langue",
+    "stars": "{{count}} étoiles"
   },
   "feedback": {
     "correct": "Bravo !",

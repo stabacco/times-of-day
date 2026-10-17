@@ -7,7 +7,12 @@
   "actions": {
     "check": "Check",
     "mute": "Mute",
-    "unmute": "Unmute"
+    "unmute": "Unmute",
+    "sound": "Sound"
+  },
+  "a11y": {
+    "language": "Language",
+    "stars": "{{count}} stars"
   },
   "feedback": {
     "correct": "Great job!",

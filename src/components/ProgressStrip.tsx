@@ -105,12 +105,11 @@ export function ProgressStrip({
   onChangeLng,
 }: ProgressStripProps) {
   const { t } = useTranslation()
-  const muteLabel = muted ? t('actions.unmute') : t('actions.mute')
 
   return (
     <Strip>
       <Stage>{stageLabel}</Stage>
-      <Stars aria-label={`${stars} stars`}>
+      <Stars role="img" aria-label={t('a11y.stars', { count: stars })}>
         <StarIcon aria-hidden="true">★</StarIcon>
         {stars}
       </Stars>
@@ -119,14 +118,14 @@ export function ProgressStrip({
           type="button"
           onClick={onToggleMute}
           aria-pressed={muted}
-          aria-label={muteLabel}
+          aria-label={t('actions.sound')}
         >
           {muted ? '🔇' : '🔊'}
         </IconButton>
         <LangSelect
           value={currentLng}
           onChange={(e) => onChangeLng(e.target.value)}
-          aria-label="Language"
+          aria-label={t('a11y.language')}
         >
           {languages.map((l) => (
             <option key={l.code} value={l.code}>

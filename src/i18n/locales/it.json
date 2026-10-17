@@ -7,7 +7,12 @@
   "actions": {
     "check": "Controlla",
     "mute": "Silenzia",
-    "unmute": "Attiva audio"
+    "unmute": "Attiva audio",
+    "sound": "Audio"
+  },
+  "a11y": {
+    "language": "Lingua",
+    "stars": "{{count}} stelle"
   },
   "feedback": {
     "correct": "Bravissimo!",
