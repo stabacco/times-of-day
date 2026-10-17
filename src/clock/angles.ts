@@ -8,7 +8,10 @@ export function hoursToAngle(hours: number, minutes: number): number {
 }
 
 export function snapMinutes(minutes: number, step: number): number {
-  if (step <= 0) return ((minutes % 60) + 60) % 60
+  if (step <= 0) {
+    const rounded = Math.round(minutes)
+    return ((rounded % 60) + 60) % 60
+  }
   const snapped = Math.round(minutes / step) * step
   return ((snapped % 60) + 60) % 60
 }
