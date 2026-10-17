@@ -1,0 +1,30 @@
+{
+  "brand": "Times of Day",
+  "prompt": {
+    "read": "What time is it?",
+    "set": "Set the clock to {{time}}"
+  },
+  "actions": {
+    "check": "Check",
+    "mute": "Mute",
+    "unmute": "Unmute",
+    "sound": "Sound"
+  },
+  "a11y": {
+    "clock": "Analog clock",
+    "language": "Language",
+    "stars": "{{count}} stars"
+  },
+  "feedback": {
+    "correct": "Great job!",
+    "wrong": "Nice try — it's {{time}}"
+  },
+  "stages": {
+    "hours": "Hours",
+    "half": "Half hours",
+    "quarter": "Quarter hours",
+    "five": "Five minutes",
+    "any": "Any minute"
+  },
+  "unlock": "New stage: {{stage}}"
+}

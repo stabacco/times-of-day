@@ -1,0 +1,30 @@
+{
+  "brand": "Uhrzeiten",
+  "prompt": {
+    "read": "Wie spät ist es?",
+    "set": "Stelle die Uhr auf {{time}}"
+  },
+  "actions": {
+    "check": "Prüfen",
+    "mute": "Stumm",
+    "unmute": "Ton an",
+    "sound": "Ton"
+  },
+  "a11y": {
+    "clock": "Analoguhr",
+    "language": "Sprache",
+    "stars": "{{count}} Sterne"
+  },
+  "feedback": {
+    "correct": "Super gemacht!",
+    "wrong": "Guter Versuch — es ist {{time}}"
+  },
+  "stages": {
+    "hours": "Volle Stunden",
+    "half": "Halbe Stunden",
+    "quarter": "Viertelstunden",
+    "five": "Fünf Minuten",
+    "any": "Jede Minute"
+  },
+  "unlock": "Neue Stufe: {{stage}}"
+}

@@ -1,0 +1,30 @@
+{
+  "brand": "Horas do Dia",
+  "prompt": {
+    "read": "Que horas são?",
+    "set": "Ajuste o relógio para {{time}}"
+  },
+  "actions": {
+    "check": "Verificar",
+    "mute": "Silenciar",
+    "unmute": "Ativar som",
+    "sound": "Som"
+  },
+  "a11y": {
+    "clock": "Relógio analógico",
+    "language": "Idioma",
+    "stars": "{{count}} estrelas"
+  },
+  "feedback": {
+    "correct": "Muito bem!",
+    "wrong": "Boa tentativa — {{time}}"
+  },
+  "stages": {
+    "hours": "Horas",
+    "half": "Meias horas",
+    "quarter": "Quartos de hora",
+    "five": "Cinco minutos",
+    "any": "Qualquer minuto"
+  },
+  "unlock": "Nova etapa: {{stage}}"
+}

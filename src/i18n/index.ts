@@ -1,0 +1,46 @@
+import i18n from 'i18next'
+import LanguageDetector from 'i18next-browser-languagedetector'
+import { initReactI18next } from 'react-i18next'
+import de from './locales/de.json'
+import en from './locales/en.json'
+import es from './locales/es.json'
+import fr from './locales/fr.json'
+import it from './locales/it.json'
+import pt from './locales/pt.json'
+import zhCN from './locales/zh-CN.json'
+
+export const SUPPORTED_LNGS = ['en', 'es', 'fr', 'it', 'de', 'pt', 'zh-CN'] as const
+
+export async function initI18n(): Promise<void> {
+  await i18n
+    .use(LanguageDetector)
+    .use(initReactI18next)
+    .init({
+      resources: {
+        en: { translation: en },
+        es: { translation: es },
+        fr: { translation: fr },
+        it: { translation: it },
+        de: { translation: de },
+        pt: { translation: pt },
+        'zh-CN': { translation: zhCN },
+      },
+      supportedLngs: [...SUPPORTED_LNGS],
+      fallbackLng: 'en',
+      nonExplicitSupportedLngs: true,
+      interpolation: { escapeValue: false },
+      detection: {
+        order: ['navigator', 'htmlTag'],
+        caches: [],
+        // Map bare/regional Chinese (zh, zh-TW, ...) onto the one bundled variant.
+        convertDetectedLanguage: (lng: string) => (/^zh(-|$)/i.test(lng) ? 'zh-CN' : lng),
+      },
+    })
+  const syncLang = (lng: string | undefined) => {
+    if (lng && typeof document !== 'undefined') document.documentElement.lang = lng
+  }
+  syncLang(i18n.resolvedLanguage ?? i18n.language)
+  i18n.on('languageChanged', syncLang)
+}
+
+export { i18n }

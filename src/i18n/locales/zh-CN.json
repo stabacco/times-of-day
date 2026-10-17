@@ -1,0 +1,30 @@
+{
+  "brand": "时间小课堂",
+  "prompt": {
+    "read": "现在几点了？",
+    "set": "把时钟调到 {{time}}"
+  },
+  "actions": {
+    "check": "检查",
+    "mute": "静音",
+    "unmute": "取消静音",
+    "sound": "声音"
+  },
+  "a11y": {
+    "clock": "指针时钟",
+    "language": "语言",
+    "stars": "{{count}} 颗星"
+  },
+  "feedback": {
+    "correct": "太棒了！",
+    "wrong": "再接再厉 — 现在是 {{time}}"
+  },
+  "stages": {
+    "hours": "整点",
+    "half": "半点",
+    "quarter": "一刻钟",
+    "five": "五分钟",
+    "any": "任意分钟"
+  },
+  "unlock": "新阶段：{{stage}}"
+}
