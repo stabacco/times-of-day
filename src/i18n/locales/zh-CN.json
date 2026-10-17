@@ -11,6 +11,7 @@
     "sound": "声音"
   },
   "a11y": {
+    "clock": "指针时钟",
     "language": "语言",
     "stars": "{{count}} 颗星"
   },

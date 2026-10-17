@@ -125,6 +125,12 @@ describe('ClockFace', () => {
     expect(screen.getByRole('img', { name: '3:00' })).toBeInTheDocument()
   })
 
+  it('uses a custom ariaLabel without revealing the time', () => {
+    renderFace({ ariaLabel: 'Analog clock' })
+    expect(screen.getByRole('img', { name: 'Analog clock' })).toBeInTheDocument()
+    expect(screen.queryByRole('img', { name: '3:00' })).toBeNull()
+  })
+
   it('renders numerals 1-12 and 12 ticks', () => {
     const { container } = renderFace()
     for (let n = 1; n <= 12; n++) {

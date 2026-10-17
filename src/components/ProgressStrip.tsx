@@ -1,10 +1,12 @@
-import styled from 'styled-components'
+import styled, { css, keyframes } from 'styled-components'
 import { useTranslation } from 'react-i18next'
 
 export interface ProgressStripProps {
   stageLabel: string
   stars: number
   muted: boolean
+  /** Plays a short bloom on the stage label (caller disables for reduced motion). */
+  bloom?: boolean
   onToggleMute: () => void
   languages: { code: string; label: string }[]
   currentLng: string
@@ -28,7 +30,18 @@ const Strip = styled.header`
   color: ${({ theme }) => theme.colors.inkMuted};
 `
 
-const Stage = styled.span`
+const bloomKeyframes = keyframes`
+  0% { transform: scale(1); opacity: 0.6; }
+  50% { transform: scale(1.15); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+`
+
+const Stage = styled.span<{ $bloom: boolean }>`
+  ${({ $bloom }) =>
+    $bloom &&
+    css`
+      animation: ${bloomKeyframes} 0.6s ease-out;
+    `}
   padding: 0.25rem 0.9rem;
   border-radius: ${({ theme }) => theme.radii.pill};
   background: ${({ theme }) => theme.colors.mint};
@@ -99,6 +112,7 @@ export function ProgressStrip({
   stageLabel,
   stars,
   muted,
+  bloom = false,
   onToggleMute,
   languages,
   currentLng,
@@ -108,7 +122,7 @@ export function ProgressStrip({
 
   return (
     <Strip>
-      <Stage>{stageLabel}</Stage>
+      <Stage $bloom={bloom}>{stageLabel}</Stage>
       <Stars role="img" aria-label={t('a11y.stars', { count: stars })}>
         <StarIcon aria-hidden="true">★</StarIcon>
         {stars}

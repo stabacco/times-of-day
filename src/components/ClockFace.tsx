@@ -11,6 +11,8 @@ export type ClockFaceProps = {
   snapStep: number
   showHourHint?: boolean
   animateHands?: boolean
+  /** Overrides the accessible name (defaults to the digital time). */
+  ariaLabel?: string
   onChange?: (time: ClockTime) => void
 }
 
@@ -94,6 +96,7 @@ function pickHand(clientX: number, clientY: number, rect: DOMRect, time: ClockTi
 
 const Wrapper = styled.div`
   width: 100%;
+  min-width: min(70vw, 320px);
   max-width: 420px;
   margin: 0 auto;
   aspect-ratio: 1;
@@ -138,6 +141,7 @@ export function ClockFace({
   snapStep,
   showHourHint = false,
   animateHands = false,
+  ariaLabel,
   onChange,
 }: ClockFaceProps) {
   const { colors } = useTheme()
@@ -196,7 +200,7 @@ export function ClockFace({
         ref={svgRef}
         viewBox={`0 0 ${VIEW} ${VIEW}`}
         role="img"
-        aria-label={timeToDigits(time)}
+        aria-label={ariaLabel ?? timeToDigits(time)}
         $interactive={interactive}
         data-dragging={dragging ?? undefined}
         onPointerDown={handlePointerDown}

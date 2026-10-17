@@ -32,8 +32,11 @@ const Shell = styled.main`
   flex-direction: column;
   align-items: center;
   gap: 1.25rem;
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
   min-height: 100vh;
-  padding: 1.5rem 1rem 3rem;
+  padding: 1rem 1rem 2.5rem;
 `
 
 const Controls = styled.div`
@@ -78,6 +81,7 @@ export function GameScreen() {
         stageLabel={t(stageLabelKey(session.stage))}
         stars={session.totalStars}
         muted={session.muted}
+        bloom={feedback?.kind === 'unlock' && !reducedMotion}
         onToggleMute={toggleMute}
         languages={LANGUAGES}
         currentLng={resolveLng(i18n.resolvedLanguage ?? i18n.language)}
@@ -91,6 +95,7 @@ export function GameScreen() {
         snapStep={prompt.snapStep}
         showHourHint={prompt.showHint}
         animateHands={!reducedMotion}
+        ariaLabel={!isSet && !locked ? t('a11y.clock') : undefined}
         onChange={setDraftTime}
       />
       <Controls>

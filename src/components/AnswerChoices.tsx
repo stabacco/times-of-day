@@ -18,11 +18,11 @@ const Grid = styled.div`
   grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
   gap: 0.75rem;
   width: 100%;
-  max-width: 560px;
+  max-width: 100%;
 `
 
 const Choice = styled.button<{ $outcome: Outcome }>`
-  min-height: 64px;
+  min-height: 56px; /* >= 48px touch target */
   padding: 0.5rem 1rem;
   border: 3px solid ${({ theme }) => theme.colors.clockRim};
   border-radius: ${({ theme }) => theme.radii.button};

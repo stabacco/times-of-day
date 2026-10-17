@@ -11,6 +11,7 @@
     "sound": "Sonido"
   },
   "a11y": {
+    "clock": "Reloj analógico",
     "language": "Idioma",
     "stars": "{{count}} estrellas"
   },

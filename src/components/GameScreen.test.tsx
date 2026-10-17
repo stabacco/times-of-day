@@ -20,7 +20,10 @@ describe('GameScreen', () => {
       </ThemeProvider>,
     )
     expect(screen.getByRole('heading', { name: /times of day/i })).toBeInTheDocument()
-    expect(screen.getByRole('img', { name: /\d+:\d\d/ })).toBeInTheDocument()
+    // Read mode must not leak the answer via the accessible name; set mode shows the draft time.
+    expect(
+      screen.getByRole('img', { name: /^(Analog clock|\d+:\d\d)$/ }),
+    ).toBeInTheDocument()
 
     const stars = screen.getByRole('img', { name: /stars/i })
     expect(stars).toHaveTextContent('0')
