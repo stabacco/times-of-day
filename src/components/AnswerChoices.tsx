@@ -1,6 +1,9 @@
 import styled, { css } from 'styled-components'
+import { useTranslation } from 'react-i18next'
 import { timeEquals, timeToDigits } from '../clock/time'
 import type { ClockTime } from '../clock/time'
+import type { DayPeriod, TimeLabelStyle } from '../game/types'
+import { formatTimeLabel } from '../i18n/formatTime'
 
 export interface AnswerChoicesProps {
   options: ClockTime[]
@@ -8,6 +11,8 @@ export interface AnswerChoicesProps {
   /** The option the player picked; set once feedback is showing. */
   chosen: ClockTime | null
   disabled: boolean
+  labelStyle: TimeLabelStyle
+  period: DayPeriod
   onSelect: (t: ClockTime) => void
 }
 
@@ -21,16 +26,17 @@ const Grid = styled.div`
   max-width: 100%;
 `
 
-const Choice = styled.button<{ $outcome: Outcome }>`
+const Choice = styled.button<{ $outcome: Outcome; $long: boolean }>`
   min-height: 56px; /* >= 48px touch target */
-  padding: 0.5rem 1rem;
+  padding: 0.5rem 0.75rem;
   border: 3px solid ${({ theme }) => theme.colors.clockRim};
   border-radius: ${({ theme }) => theme.radii.button};
   background: ${({ theme }) => theme.colors.white};
   color: ${({ theme }) => theme.colors.ink};
   font-family: ${({ theme }) => theme.fonts.display};
   font-weight: 700;
-  font-size: 1.75rem;
+  font-size: ${({ $long }) => ($long ? '1.15rem' : '1.75rem')};
+  line-height: 1.2;
   font-variant-numeric: tabular-nums;
   cursor: pointer;
 
@@ -63,11 +69,24 @@ const Choice = styled.button<{ $outcome: Outcome }>`
     `}
 `
 
-export function AnswerChoices({ options, target, chosen, disabled, onSelect }: AnswerChoicesProps) {
+export function AnswerChoices({
+  options,
+  target,
+  chosen,
+  disabled,
+  labelStyle,
+  period,
+  onSelect,
+}: AnswerChoicesProps) {
+  const { i18n } = useTranslation()
+  const locale = i18n.resolvedLanguage ?? i18n.language
+
   return (
     <Grid>
       {options.map((option) => {
         const digits = timeToDigits(option)
+        const label = formatTimeLabel(option, { style: labelStyle, period, locale })
+        const long = label.length > 6
         let outcome: Outcome = null
         if (chosen) {
           if (timeEquals(option, target)) outcome = 'correct'
@@ -79,9 +98,10 @@ export function AnswerChoices({ options, target, chosen, disabled, onSelect }: A
             type="button"
             disabled={disabled}
             $outcome={outcome}
+            $long={long}
             onClick={() => onSelect(option)}
           >
-            {digits}
+            {label}
           </Choice>
         )
       })}

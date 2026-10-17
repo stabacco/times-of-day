@@ -1,7 +1,6 @@
 import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
-import { timeToDigits } from '../clock/time'
-import { formatTimePhrase } from '../i18n/formatTime'
+import { formatTimeLabel, formatTimeSecondary } from '../i18n/formatTime'
 import type { Prompt } from '../game/types'
 
 const Banner = styled.div`
@@ -35,13 +34,16 @@ export function PromptBanner({ prompt }: { prompt: Prompt }) {
       </Banner>
     )
   }
-  // Set prompts always lead with digits; the written phrase is secondary.
-  const digits = timeToDigits(prompt.target)
-  const phrase = formatTimePhrase(prompt.target, i18n.language)
+
+  const locale = i18n.resolvedLanguage ?? i18n.language
+  const opts = { style: prompt.labelStyle, period: prompt.period, locale }
+  const primary = formatTimeLabel(prompt.target, opts)
+  const secondary = formatTimeSecondary(prompt.target, opts)
+
   return (
     <Banner aria-live="polite">
-      <Line>{t('prompt.set', { time: digits })}</Line>
-      {phrase !== digits && <Secondary>{phrase}</Secondary>}
+      <Line>{t('prompt.set', { time: primary })}</Line>
+      {secondary && <Secondary>{secondary}</Secondary>}
     </Banner>
   )
 }

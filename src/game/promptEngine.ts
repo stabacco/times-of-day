@@ -93,6 +93,15 @@ export function nextPrompt(session: SessionState, rng: Rng = Math.random): Promp
   const target = randomLegalTime(stage, rng)
   const snapStep = minuteStepForStage(stage)
 
+  // Mix plain digits, spoken phrases (incl. midday/midnight), and am/pm forms.
+  const styleRoll = rng()
+  let labelStyle = styleRoll < 1 / 3 ? 'digits' : styleRoll < 2 / 3 ? 'phrase' : 'ampm'
+  const period = rng() < 0.5 ? 'am' : 'pm'
+  // At 12:00, prefer phrase labels so kids see midday / midnight often.
+  if (target.hours === 12 && target.minutes === 0 && rng() < 0.7) {
+    labelStyle = 'phrase'
+  }
+
   if (kind === 'read') {
     const optionCount = difficulty === 0 ? 3 : 4
     const distractors = buildDistractors(target, stage, difficulty, optionCount - 1, rng)
@@ -101,6 +110,8 @@ export function nextPrompt(session: SessionState, rng: Rng = Math.random): Promp
       target,
       options: shuffle([target, ...distractors], rng),
       snapStep,
+      labelStyle,
+      period,
     }
   }
 
@@ -109,5 +120,7 @@ export function nextPrompt(session: SessionState, rng: Rng = Math.random): Promp
     target,
     showHint: difficulty === 0,
     snapStep,
+    labelStyle,
+    period,
   }
 }

@@ -108,6 +108,8 @@ export function GameScreen() {
             target={prompt.target}
             chosen={lastChoice}
             disabled={locked}
+            labelStyle={prompt.labelStyle}
+            period={prompt.period}
             onSelect={selectOption}
           />
         )}

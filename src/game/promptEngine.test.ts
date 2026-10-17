@@ -186,4 +186,21 @@ describe('nextPrompt', () => {
     const p = nextPrompt(s, () => 0.1)
     expect(p.kind).toBe('set')
   })
+
+  it('mixes digits, phrase, and ampm label styles', () => {
+    const styles = new Set<string>()
+    for (let i = 0; i < 60; i++) {
+      styles.add(nextPrompt(session('quarter', 1), seeded(i + 900)).labelStyle)
+    }
+    expect(styles.has('phrase')).toBe(true)
+    expect(styles.has('digits')).toBe(true)
+    expect(styles.has('ampm')).toBe(true)
+  })
+
+  it('assigns a day period on every prompt', () => {
+    for (let i = 0; i < 20; i++) {
+      const p = nextPrompt(session('hours', 1), seeded(i + 50))
+      expect(p.period === 'am' || p.period === 'pm').toBe(true)
+    }
+  })
 })

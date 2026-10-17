@@ -10,7 +10,16 @@ const seenSessions: SessionState[] = []
 vi.mock('../game/promptEngine', () => ({
   nextPrompt: (session: SessionState) => {
     seenSessions.push(session)
-    return prompts.shift() ?? { kind: 'read', target: { hours: 3, minutes: 0 }, options: [], snapStep: 60 }
+    return (
+      prompts.shift() ?? {
+        kind: 'read',
+        target: { hours: 3, minutes: 0 },
+        options: [],
+        snapStep: 60,
+        labelStyle: 'digits',
+        period: 'am',
+      }
+    )
   },
 }))
 
@@ -24,8 +33,16 @@ const read = (h: number): Prompt => ({
     { hours: h === 12 ? 1 : h + 1, minutes: 0 },
   ],
   snapStep: 60,
+  labelStyle: 'digits',
+  period: 'am',
 })
-const set = (h: number): Prompt => ({ kind: 'set', target: { hours: h, minutes: 0 }, snapStep: 60 })
+const set = (h: number): Prompt => ({
+  kind: 'set',
+  target: { hours: h, minutes: 0 },
+  snapStep: 60,
+  labelStyle: 'digits',
+  period: 'am',
+})
 
 describe('useGameSession', () => {
   beforeEach(() => {
