@@ -1,7 +1,15 @@
 import type { ClockTime } from '../clock/time'
 import { normalizeTime, timeEquals } from '../clock/time'
 import { minuteStepForStage, randomLegalTime } from './stages'
-import type { Difficulty, Prompt, PromptKind, SessionState, StageId } from './types'
+import type {
+  DayPeriod,
+  Difficulty,
+  Prompt,
+  PromptKind,
+  SessionState,
+  StageId,
+  TimeLabelStyle,
+} from './types'
 
 type Rng = () => number
 
@@ -95,8 +103,9 @@ export function nextPrompt(session: SessionState, rng: Rng = Math.random): Promp
 
   // Mix plain digits, spoken phrases (incl. midday/midnight), and am/pm forms.
   const styleRoll = rng()
-  let labelStyle = styleRoll < 1 / 3 ? 'digits' : styleRoll < 2 / 3 ? 'phrase' : 'ampm'
-  const period = rng() < 0.5 ? 'am' : 'pm'
+  let labelStyle: TimeLabelStyle =
+    styleRoll < 1 / 3 ? 'digits' : styleRoll < 2 / 3 ? 'phrase' : 'ampm'
+  const period: DayPeriod = rng() < 0.5 ? 'am' : 'pm'
   // At 12:00, prefer phrase labels so kids see midday / midnight often.
   if (target.hours === 12 && target.minutes === 0 && rng() < 0.7) {
     labelStyle = 'phrase'
