@@ -2,6 +2,10 @@
 
 A calm, one-page game that teaches kids to read and set analog clocks. Players answer "What time is it?" by picking a digital time, or set the clock hands themselves. Stages unlock as they earn stars: hours, half hours, quarter hours, five minutes, then any minute. Sound effects are soft and can be muted, and motion respects `prefers-reduced-motion`.
 
+## Requirements
+
+Node **>= 22.22.2** (`package.json` `engines`). Use [nvm](https://github.com/nvm-sh/nvm): `nvm use` reads `.nvmrc` (Node 22).
+
 ## Commands
 
 ```bash
@@ -19,7 +23,9 @@ The Vite `base` is `/times-of-day/`, so the built site is served from:
 https://<user>.github.io/times-of-day/
 ```
 
-Publish the contents of `dist/` to GitHub Pages.
+Pushes to `main` run [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) (install, test, build, upload `dist/`).
+
+**One-time setup:** In the repo on GitHub, open **Settings → Pages** and set **Source** to **GitHub Actions**. After the first successful workflow run, confirm the site loads at the URL above.
 
 ## Languages
 
