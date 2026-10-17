@@ -13,7 +13,11 @@
   "a11y": {
     "clock": "Analog clock",
     "language": "Language",
-    "stars": "{{count}} stars"
+    "stars": "{{count}} stars",
+    "stage": "Stage",
+    "stageProgress": "{{current}} of {{goal}} stars to unlock",
+    "day": "Daytime",
+    "night": "Nighttime"
   },
   "feedback": {
     "correct": "Great job!",

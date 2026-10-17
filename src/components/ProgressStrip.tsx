@@ -1,13 +1,16 @@
 import styled, { css, keyframes } from 'styled-components'
 import { useTranslation } from 'react-i18next'
+import { STAGE_ORDER, STARS_TO_UNLOCK, stageLabelKey } from '../game/stages'
+import type { StageId } from '../game/types'
 
 export interface ProgressStripProps {
-  stageLabel: string
-  stars: number
+  stage: StageId
+  starsInStage: number
   muted: boolean
-  /** Plays a short bloom on the stage label (caller disables for reduced motion). */
+  /** Plays a short bloom on the stage control (caller disables for reduced motion). */
   bloom?: boolean
   onToggleMute: () => void
+  onSelectStage: (stage: StageId) => void
   languages: { code: string; label: string }[]
   currentLng: string
   onChangeLng: (code: string) => void
@@ -36,21 +39,30 @@ const bloomKeyframes = keyframes`
   100% { transform: scale(1); opacity: 1; }
 `
 
-const Stage = styled.span<{ $bloom: boolean }>`
+const StageSelect = styled.select<{ $bloom: boolean }>`
   ${({ $bloom }) =>
     $bloom &&
     css`
       animation: ${bloomKeyframes} 0.6s ease-out;
     `}
-  padding: 0.25rem 0.9rem;
+  min-height: 44px;
+  max-width: 11rem;
+  padding: 0.25rem 0.6rem;
+  border: 2px solid ${({ theme }) => theme.colors.clockRim};
   border-radius: ${({ theme }) => theme.radii.pill};
   background: ${({ theme }) => theme.colors.mint};
   color: ${({ theme }) => theme.colors.ink};
   font-family: ${({ theme }) => theme.fonts.display};
   font-weight: 600;
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 3px solid ${({ theme }) => theme.colors.hourHand};
+    outline-offset: 2px;
+  }
 `
 
-const Stars = styled.span`
+const Progress = styled.span`
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
@@ -58,6 +70,7 @@ const Stars = styled.span`
   font-weight: 600;
   font-size: 1.1rem;
   color: ${({ theme }) => theme.colors.ink};
+  font-variant-numeric: tabular-nums;
 `
 
 const StarIcon = styled.span`
@@ -109,24 +122,41 @@ const LangSelect = styled.select`
 `
 
 export function ProgressStrip({
-  stageLabel,
-  stars,
+  stage,
+  starsInStage,
   muted,
   bloom = false,
   onToggleMute,
+  onSelectStage,
   languages,
   currentLng,
   onChangeLng,
 }: ProgressStripProps) {
   const { t } = useTranslation()
+  const goal = STARS_TO_UNLOCK
+  const capped = Math.min(starsInStage, goal)
 
   return (
     <Strip>
-      <Stage $bloom={bloom}>{stageLabel}</Stage>
-      <Stars role="img" aria-label={t('a11y.stars', { count: stars })}>
+      <StageSelect
+        $bloom={bloom}
+        value={stage}
+        aria-label={t('a11y.stage')}
+        onChange={(e) => onSelectStage(e.target.value as StageId)}
+      >
+        {STAGE_ORDER.map((id) => (
+          <option key={id} value={id}>
+            {t(stageLabelKey(id))}
+          </option>
+        ))}
+      </StageSelect>
+      <Progress
+        role="img"
+        aria-label={t('a11y.stageProgress', { current: capped, goal })}
+      >
         <StarIcon aria-hidden="true">★</StarIcon>
-        {stars}
-      </Stars>
+        {capped}/{goal}
+      </Progress>
       <Controls>
         <IconButton
           type="button"

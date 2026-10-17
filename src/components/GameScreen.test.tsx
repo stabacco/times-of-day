@@ -25,8 +25,9 @@ describe('GameScreen', () => {
       screen.getByRole('img', { name: /^(Analog clock|\d+:\d\d)$/ }),
     ).toBeInTheDocument()
 
-    const stars = screen.getByRole('img', { name: /stars/i })
-    expect(stars).toHaveTextContent('0')
+    expect(screen.getByRole('combobox', { name: /stage/i })).toBeInTheDocument()
+    const progress = screen.getByRole('img', { name: /stars/i })
+    expect(progress).toHaveTextContent('0/8')
 
     const user = userEvent.setup()
     const check = screen.queryByRole('button', { name: /check/i })
@@ -46,5 +47,18 @@ describe('GameScreen', () => {
     await act(() => i18n.changeLanguage('zh-CN'))
     expect(screen.getByRole('status')).not.toBeEmptyDOMElement()
     await act(() => i18n.changeLanguage('en'))
+  })
+
+  it('lets the player jump to another stage', async () => {
+    render(
+      <ThemeProvider theme={theme}>
+        <GameScreen />
+      </ThemeProvider>,
+    )
+    const user = userEvent.setup()
+    const stage = screen.getByRole('combobox', { name: /stage/i })
+    await user.selectOptions(stage, 'half')
+    expect(stage).toHaveValue('half')
+    expect(screen.getByRole('img', { name: /stars/i })).toHaveTextContent('0/8')
   })
 })

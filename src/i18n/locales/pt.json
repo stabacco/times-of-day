@@ -13,7 +13,11 @@
   "a11y": {
     "clock": "Relógio analógico",
     "language": "Idioma",
-    "stars": "{{count}} estrelas"
+    "stars": "{{count}} estrelas",
+    "stage": "Nível",
+    "stageProgress": "{{current}} de {{goal}} estrelas para desbloquear",
+    "day": "Dia",
+    "night": "Noite"
   },
   "feedback": {
     "correct": "Muito bem!",

@@ -13,7 +13,11 @@
   "a11y": {
     "clock": "Analoguhr",
     "language": "Sprache",
-    "stars": "{{count}} Sterne"
+    "stars": "{{count}} Sterne",
+    "stage": "Stufe",
+    "stageProgress": "{{current}} von {{goal}} Sternen zum Freischalten",
+    "day": "Tag",
+    "night": "Nacht"
   },
   "feedback": {
     "correct": "Super gemacht!",

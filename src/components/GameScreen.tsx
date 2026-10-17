@@ -3,11 +3,11 @@ import { useTranslation } from 'react-i18next'
 import { useGameSession } from '../hooks/useGameSession'
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion'
 import { normalizeTime } from '../clock/time'
-import { stageLabelKey } from '../game/stages'
 import { SUPPORTED_LNGS } from '../i18n'
 import { AnswerChoices } from './AnswerChoices'
 import { Brand } from './Brand'
 import { ClockFace } from './ClockFace'
+import { DayPeriodCue } from './DayPeriodCue'
 import { FeedbackFlash } from './FeedbackFlash'
 import { ProgressStrip } from './ProgressStrip'
 import { PromptBanner } from './PromptBanner'
@@ -40,6 +40,14 @@ const Shell = styled.main`
   padding: 1rem 1rem 2.5rem;
 `
 
+const PromptRow = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  width: 100%;
+`
+
 const Controls = styled.div`
   display: flex;
   justify-content: center;
@@ -67,6 +75,7 @@ export function GameScreen() {
     selectOption,
     checkSet,
     toggleMute,
+    selectStage,
     dismissFeedbackAndContinue,
   } = useGameSession()
 
@@ -79,17 +88,25 @@ export function GameScreen() {
   return (
     <Shell>
       <ProgressStrip
-        stageLabel={t(stageLabelKey(session.stage))}
-        stars={session.totalStars}
+        stage={session.stage}
+        starsInStage={session.starsInStage}
         muted={session.muted}
         bloom={feedback?.kind === 'unlock' && !reducedMotion}
         onToggleMute={toggleMute}
+        onSelectStage={selectStage}
         languages={LANGUAGES}
         currentLng={resolveLng(i18n.resolvedLanguage ?? i18n.language)}
         onChangeLng={(code) => void i18n.changeLanguage(code)}
       />
       <Brand />
-      <PromptBanner prompt={prompt} />
+      <PromptRow>
+        <DayPeriodCue
+          period={prompt.period}
+          time={prompt.target}
+          labelStyle={prompt.labelStyle}
+        />
+        <PromptBanner prompt={prompt} />
+      </PromptRow>
       <ClockFace
         time={clockTime}
         interactive={isSet && !locked}
