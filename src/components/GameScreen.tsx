@@ -2,6 +2,7 @@ import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
 import { useGameSession } from '../hooks/useGameSession'
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion'
+import { normalizeTime } from '../clock/time'
 import { stageLabelKey } from '../game/stages'
 import { SUPPORTED_LNGS } from '../i18n'
 import { AnswerChoices } from './AnswerChoices'
@@ -93,7 +94,7 @@ export function GameScreen() {
         time={clockTime}
         interactive={isSet && !locked}
         snapStep={prompt.snapStep}
-        showHourHint={prompt.showHint}
+        hintHour={prompt.showHint ? normalizeTime(prompt.target).hours : null}
         animateHands={!reducedMotion}
         ariaLabel={!isSet && !locked ? t('a11y.clock') : undefined}
         onChange={setDraftTime}

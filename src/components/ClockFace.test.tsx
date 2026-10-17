@@ -206,3 +206,24 @@ describe('ClockFace', () => {
     expect(onChange).not.toHaveBeenCalled()
   })
 })
+
+describe('ClockFace hintHour', () => {
+  it('emphasises the hint hour, not the hour hand', () => {
+    const { container } = render(
+      <ThemeProvider theme={theme}>
+        <ClockFace
+          time={{ hours: 9, minutes: 0 }}
+          interactive={false}
+          snapStep={5}
+          hintHour={4}
+        />
+      </ThemeProvider>,
+    )
+    const sizeOf = (n: string) =>
+      getComputedStyle(
+        Array.from(container.querySelectorAll('text')).find((el) => el.textContent === n)!,
+      ).fontSize
+    expect(sizeOf('4')).toBe('18px')
+    expect(sizeOf('9')).toBe('14px')
+  })
+})

@@ -29,8 +29,18 @@ export async function initI18n(): Promise<void> {
       fallbackLng: 'en',
       nonExplicitSupportedLngs: true,
       interpolation: { escapeValue: false },
-      detection: { order: ['navigator', 'htmlTag'], caches: [] },
+      detection: {
+        order: ['navigator', 'htmlTag'],
+        caches: [],
+        // Map bare/regional Chinese (zh, zh-TW, ...) onto the one bundled variant.
+        convertDetectedLanguage: (lng: string) => (/^zh(-|$)/i.test(lng) ? 'zh-CN' : lng),
+      },
     })
+  const syncLang = (lng: string | undefined) => {
+    if (lng && typeof document !== 'undefined') document.documentElement.lang = lng
+  }
+  syncLang(i18n.resolvedLanguage ?? i18n.language)
+  i18n.on('languageChanged', syncLang)
 }
 
 export { i18n }

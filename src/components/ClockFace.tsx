@@ -9,7 +9,8 @@ export type ClockFaceProps = {
   time: ClockTime
   interactive: boolean
   snapStep: number
-  showHourHint?: boolean
+  /** Hour numeral (1–12) to emphasise; independent of the hand positions. */
+  hintHour?: number | null
   animateHands?: boolean
   /** Overrides the accessible name (defaults to the digital time). */
   ariaLabel?: string
@@ -139,7 +140,7 @@ export function ClockFace({
   time,
   interactive,
   snapStep,
-  showHourHint = false,
+  hintHour = null,
   animateHands = false,
   ariaLabel,
   onChange,
@@ -192,7 +193,6 @@ export function ClockFace({
   }
 
   const ticks = Array.from({ length: 12 }, (_, i) => i)
-  const hintHour = showHourHint ? n.hours : null
 
   return (
     <Wrapper>
