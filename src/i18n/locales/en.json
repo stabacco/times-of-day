@@ -1,0 +1,24 @@
+{
+  "brand": "Times of Day",
+  "prompt": {
+    "read": "What time is it?",
+    "set": "Set the clock to {{time}}"
+  },
+  "actions": {
+    "check": "Check",
+    "mute": "Mute",
+    "unmute": "Unmute"
+  },
+  "feedback": {
+    "correct": "Great job!",
+    "wrong": "Nice try — it's {{time}}"
+  },
+  "stages": {
+    "hours": "Hours",
+    "half": "Half hours",
+    "quarter": "Quarter hours",
+    "five": "Five minutes",
+    "any": "Any minute"
+  },
+  "unlock": "New stage: {{stage}}"
+}

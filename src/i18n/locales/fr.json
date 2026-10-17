@@ -1,0 +1,24 @@
+{
+  "brand": "Heures du Jour",
+  "prompt": {
+    "read": "Quelle heure est-il ?",
+    "set": "Règle l'horloge sur {{time}}"
+  },
+  "actions": {
+    "check": "Vérifier",
+    "mute": "Couper le son",
+    "unmute": "Activer le son"
+  },
+  "feedback": {
+    "correct": "Bravo !",
+    "wrong": "Bien essayé — il est {{time}}"
+  },
+  "stages": {
+    "hours": "Heures",
+    "half": "Demi-heures",
+    "quarter": "Quarts d'heure",
+    "five": "Cinq minutes",
+    "any": "N'importe quelle minute"
+  },
+  "unlock": "Nouvelle étape : {{stage}}"
+}

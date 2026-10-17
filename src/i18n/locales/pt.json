@@ -1,0 +1,24 @@
+{
+  "brand": "Horas do Dia",
+  "prompt": {
+    "read": "Que horas são?",
+    "set": "Ajuste o relógio para {{time}}"
+  },
+  "actions": {
+    "check": "Verificar",
+    "mute": "Silenciar",
+    "unmute": "Ativar som"
+  },
+  "feedback": {
+    "correct": "Muito bem!",
+    "wrong": "Boa tentativa — {{time}}"
+  },
+  "stages": {
+    "hours": "Horas",
+    "half": "Meias horas",
+    "quarter": "Quartos de hora",
+    "five": "Cinco minutos",
+    "any": "Qualquer minuto"
+  },
+  "unlock": "Nova etapa: {{stage}}"
+}

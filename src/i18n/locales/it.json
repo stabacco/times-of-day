@@ -1,0 +1,24 @@
+{
+  "brand": "Ore del Giorno",
+  "prompt": {
+    "read": "Che ore sono?",
+    "set": "Imposta l'orologio: {{time}}"
+  },
+  "actions": {
+    "check": "Controlla",
+    "mute": "Silenzia",
+    "unmute": "Attiva audio"
+  },
+  "feedback": {
+    "correct": "Bravissimo!",
+    "wrong": "Bel tentativo — {{time}}"
+  },
+  "stages": {
+    "hours": "Ore",
+    "half": "Mezz'ore",
+    "quarter": "Quarti d'ora",
+    "five": "Cinque minuti",
+    "any": "Qualsiasi minuto"
+  },
+  "unlock": "Nuovo livello: {{stage}}"
+}
