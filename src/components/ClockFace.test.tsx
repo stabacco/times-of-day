@@ -43,6 +43,41 @@ describe('pointerEventToTime', () => {
     expect(t).toEqual({ hours: 1, minutes: 0 })
   })
 
+  // Pointer positions on the face (rect 200x200, center 100,100) by minute-hand angle.
+  const at = (deg: number): [number, number] => {
+    const r = (deg * Math.PI) / 180
+    return [100 + 80 * Math.sin(r), 100 - 80 * Math.cos(r)]
+  }
+
+  it('carries hour forward across 12 with snap 30 (:30 -> :00)', () => {
+    const [x, y] = at(350)
+    expect(pointerEventToTime(x, y, rect, 30, 'minute', { hours: 3, minutes: 30 })).toEqual({ hours: 4, minutes: 0 })
+  })
+
+  it('carries hour forward across 12 with snap 15 (:45 -> :00)', () => {
+    const [x, y] = at(5)
+    expect(pointerEventToTime(x, y, rect, 15, 'minute', { hours: 3, minutes: 45 })).toEqual({ hours: 4, minutes: 0 })
+  })
+
+  it('carries hour forward across noon with snap 30 and 15', () => {
+    const a = at(350)
+    expect(pointerEventToTime(a[0], a[1], rect, 30, 'minute', { hours: 11, minutes: 30 })).toEqual({ hours: 12, minutes: 0 })
+    const b = at(5)
+    expect(pointerEventToTime(b[0], b[1], rect, 15, 'minute', { hours: 12, minutes: 45 })).toEqual({ hours: 1, minutes: 0 })
+  })
+
+  it('carries hour backward across 12 with snap 30 and 15', () => {
+    const a = at(190)
+    expect(pointerEventToTime(a[0], a[1], rect, 30, 'minute', { hours: 4, minutes: 0 })).toEqual({ hours: 3, minutes: 30 })
+    const b = at(280)
+    expect(pointerEventToTime(b[0], b[1], rect, 15, 'minute', { hours: 1, minutes: 0 })).toEqual({ hours: 12, minutes: 45 })
+  })
+
+  it('does not carry when moving within the hour (snap 30, :00 -> :30)', () => {
+    const [x, y] = at(170)
+    expect(pointerEventToTime(x, y, rect, 30, 'minute', { hours: 3, minutes: 0 })).toEqual({ hours: 3, minutes: 30 })
+  })
+
   it('drags hour hand to 9 keeping minutes', () => {
     const t = pointerEventToTime(0, 100, rect, 5, 'hour', { hours: 3, minutes: 0 })
     expect(t).toEqual({ hours: 9, minutes: 0 })
@@ -140,6 +175,18 @@ describe('ClockFace', () => {
     fireEvent.pointerDown(svg, { clientX: 135, clientY: 100, pointerId: 1 })
     fireEvent.pointerMove(svg, { clientX: 0, clientY: 100, pointerId: 1 })
     expect(onChange).toHaveBeenLastCalledWith({ hours: 9, minutes: 0 })
+  })
+
+  it('disables hand transition while dragging', () => {
+    const { container } = renderFace({ interactive: true, animateHands: true })
+    const svg = screen.getByRole('img')
+    svg.getBoundingClientRect = () => rect
+    const group = () => container.querySelector('[data-hand-group="minute"]') as HTMLElement
+    expect(getComputedStyle(group()).transition).toContain('transform')
+    fireEvent.pointerDown(svg, { clientX: 100, clientY: 20, pointerId: 1 })
+    expect(getComputedStyle(group()).transition).not.toContain('transform')
+    fireEvent.pointerUp(svg, { clientX: 100, clientY: 20, pointerId: 1 })
+    expect(getComputedStyle(group()).transition).toContain('transform')
   })
 
   it('stops dragging after pointer up', () => {

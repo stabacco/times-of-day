@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react'
 import type { PointerEvent as ReactPointerEvent } from 'react'
 import styled, { css, useTheme } from 'styled-components'
-import { angleToHours, angleToMinutes, hoursToAngle, minutesToAngle } from '../clock/angles'
+import { angleToHours, hoursToAngle, minutesToAngle } from '../clock/angles'
 import { normalizeTime, timeToDigits } from '../clock/time'
 import type { ClockTime } from '../clock/time'
 
@@ -30,6 +30,12 @@ function pointerAngle(clientX: number, clientY: number, rect: DOMRect): number {
   return ((deg % 360) + 360) % 360
 }
 
+/** Shortest signed rotation in degrees, in (-180, 180]; exact opposite ties go clockwise. */
+function signedDelta(deg: number): number {
+  const d = ((deg % 360) + 360) % 360
+  return d > 180 ? d - 360 : d
+}
+
 export function pointerEventToTime(
   clientX: number,
   clientY: number,
@@ -45,12 +51,24 @@ export function pointerEventToTime(
       minutes: current.minutes,
     })
   }
-  const minutes = angleToMinutes(angle, snapStep)
-  let hours = current.hours
-  // Carry the hour when the minute hand sweeps across 12.
-  if (current.minutes >= 45 && minutes < 15) hours += 1
-  else if (current.minutes < 15 && minutes >= 45) hours -= 1
-  return normalizeTime({ hours, minutes })
+  // Signed shortest delta (degrees) from the previous hand position to the pointer.
+  const prevAngle = minutesToAngle(current.minutes)
+  const deltaDeg = signedDelta(angle - prevAngle)
+  // Unwrapped minutes may fall outside [0, 60): that signals a carry across 12.
+  const unwrapped = current.minutes + deltaDeg / 6
+  const step = snapStep > 0 ? snapStep : 1
+  const snapped = Math.round(unwrapped / step) * step
+  const carry = Math.floor(snapped / 60)
+  const minutes = ((snapped % 60) + 60) % 60
+  return normalizeTime({ hours: current.hours + carry, minutes })
+}
+
+/** Shortest-path rotation: keeps an unwrapped angle so CSS transitions never spin the long way. */
+function useContinuousAngle(target: number): number {
+  const ref = useRef(target)
+  const delta = signedDelta(target - ref.current)
+  ref.current = ref.current + delta
+  return ref.current
 }
 
 function angularDistance(a: number, b: number): number {
@@ -132,6 +150,9 @@ export function ClockFace({
   const n = normalizeTime(time)
   const hourAngle = hoursToAngle(n.hours, n.minutes)
   const minuteAngle = minutesToAngle(n.minutes)
+  const hourRotation = useContinuousAngle(hourAngle)
+  const minuteRotation = useContinuousAngle(minuteAngle)
+  const animate = animateHands && !dragging
 
   const handlePointerDown = (e: ReactPointerEvent<SVGSVGElement>) => {
     if (!interactive) return
@@ -214,9 +235,9 @@ export function ClockFace({
           )
         })}
         <HandGroup
-          $animate={animateHands}
+          $animate={animate}
           data-hand-group="hour"
-          style={{ transform: `rotate(${hourAngle}deg)` }}
+          style={{ transform: `rotate(${hourRotation}deg)` }}
         >
           <line
             data-hand="hour"
@@ -230,9 +251,9 @@ export function ClockFace({
           />
         </HandGroup>
         <HandGroup
-          $animate={animateHands}
+          $animate={animate}
           data-hand-group="minute"
-          style={{ transform: `rotate(${minuteAngle}deg)` }}
+          style={{ transform: `rotate(${minuteRotation}deg)` }}
         >
           <line
             data-hand="minute"
