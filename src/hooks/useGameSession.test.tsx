@@ -17,6 +17,7 @@ vi.mock('../game/promptEngine', () => ({
         options: [],
         snapStep: 60,
         labelStyle: 'digits',
+        period: 'am',
       }
     )
   },
@@ -33,12 +34,14 @@ const read = (h: number): Prompt => ({
   ],
   snapStep: 60,
   labelStyle: 'digits',
+  period: 'am',
 })
 const set = (h: number): Prompt => ({
   kind: 'set',
   target: { hours: h, minutes: 0 },
   snapStep: 60,
   labelStyle: 'digits',
+  period: 'am',
 })
 
 describe('useGameSession', () => {

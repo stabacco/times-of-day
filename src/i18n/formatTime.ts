@@ -1,5 +1,6 @@
 import { normalizeTime, timeToDigits } from '../clock/time'
 import type { ClockTime } from '../clock/time'
+import type { DayPeriod, TimeLabelStyle } from '../game/types'
 
 type Phraser = (hour: number, minutes: number, nextHour: number) => string | null
 
@@ -80,6 +81,17 @@ const zh: Phraser = (h, m) => {
 
 const PHRASERS: Record<string, Phraser> = { en, es, fr, it, de, pt, 'zh-CN': zh }
 
+/** Midday / midnight (and locale equivalents) for exactly 12:00. */
+const DAYPART: Record<string, { midday: string; midnight: string }> = {
+  en: { midday: 'midday', midnight: 'midnight' },
+  es: { midday: 'mediodía', midnight: 'medianoche' },
+  fr: { midday: 'midi', midnight: 'minuit' },
+  it: { midday: 'mezzogiorno', midnight: 'mezzanotte' },
+  de: { midday: 'Mittag', midnight: 'Mitternacht' },
+  pt: { midday: 'meio-dia', midnight: 'meia-noite' },
+  'zh-CN': { midday: '中午', midnight: '午夜' },
+}
+
 function resolveLocale(locale: string | undefined | null): string {
   if (!locale || typeof locale !== 'string') return 'en'
   if (Object.hasOwn(PHRASERS, locale)) return locale
@@ -93,4 +105,77 @@ export function formatTimePhrase(t: ClockTime, locale?: string | null): string {
   const next = n.hours === 12 ? 1 : n.hours + 1
   const phrase = PHRASERS[resolveLocale(locale)](n.hours, n.minutes, next)
   return phrase ?? timeToDigits(n)
+}
+
+/** "10pm", "3:30 am" — compact when on the hour. */
+export function formatTimeAmPm(t: ClockTime, period: DayPeriod, locale?: string | null): string {
+  const n = normalizeTime(t)
+  const loc = resolveLocale(locale)
+  if (loc === 'zh-CN') {
+    const suffix = period === 'am' ? '上午' : '下午'
+    return n.minutes === 0 ? `${suffix}${n.hours}点` : `${suffix}${timeToDigits(n)}`
+  }
+  if (loc === 'de') {
+    const suffix = period === 'am' ? 'vorm.' : 'nachm.'
+    return `${timeToDigits(n)} ${suffix}`
+  }
+  if (loc === 'es' || loc === 'pt') {
+    const suffix = period === 'am' ? 'a. m.' : 'p. m.'
+    return `${timeToDigits(n)} ${suffix}`
+  }
+  if (loc === 'fr') {
+    const suffix = period === 'am' ? 'du matin' : "de l'apres-midi"
+    return `${timeToDigits(n)} ${suffix}`
+  }
+  if (loc === 'it') {
+    const suffix = period === 'am' ? 'di mattina' : 'di sera'
+    return `${timeToDigits(n)} ${suffix}`
+  }
+  // English: "10pm" / "3:30 am"
+  if (n.minutes === 0) return `${n.hours}${period}`
+  return `${timeToDigits(n)} ${period}`
+}
+
+export function formatDaypart(t: ClockTime, period: DayPeriod, locale?: string | null): string | null {
+  const n = normalizeTime(t)
+  if (n.hours !== 12 || n.minutes !== 0) return null
+  const parts = DAYPART[resolveLocale(locale)] ?? DAYPART.en
+  return period === 'am' ? parts.midnight : parts.midday
+}
+
+export type FormatTimeLabelOpts = {
+  style: TimeLabelStyle
+  period: DayPeriod
+  locale?: string | null
+}
+
+/**
+ * Primary label for a prompt/choice.
+ * - digits: "3:30"
+ * - phrase: "half past 3", or midday/midnight at 12:00
+ * - ampm: "10pm", "3:30 am"
+ */
+export function formatTimeLabel(t: ClockTime, opts: FormatTimeLabelOpts): string {
+  const { style, period, locale } = opts
+  if (style === 'ampm') return formatTimeAmPm(t, period, locale)
+  if (style === 'phrase') {
+    const daypart = formatDaypart(t, period, locale)
+    if (daypart) return daypart
+    return formatTimePhrase(t, locale)
+  }
+  return timeToDigits(t)
+}
+
+/** Secondary hint line (usually plain digits when the primary is not). */
+export function formatTimeSecondary(t: ClockTime, opts: FormatTimeLabelOpts): string | null {
+  const primary = formatTimeLabel(t, opts)
+  const digits = timeToDigits(t)
+  if (primary === digits) return null
+  if (opts.style === 'ampm') return digits
+  if (opts.style === 'phrase') {
+    const daypart = formatDaypart(t, opts.period, opts.locale)
+    if (daypart) return formatTimeAmPm(t, opts.period, opts.locale)
+    return digits
+  }
+  return null
 }

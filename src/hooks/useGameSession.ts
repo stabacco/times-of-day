@@ -7,7 +7,7 @@ import { applyAnswer, initialSession } from '../game/progress'
 import { nextPrompt } from '../game/promptEngine'
 import { stageLabelKey } from '../game/stages'
 import type { Prompt, SessionState, StageId } from '../game/types'
-import { formatTimePhrase } from '../i18n/formatTime'
+import { formatTimeLabel } from '../i18n/formatTime'
 
 export const RESULT_FEEDBACK_MS = 900
 export const UNLOCK_FEEDBACK_MS = 1600
@@ -172,12 +172,23 @@ export function useGameSession(): GameSession {
       return { kind: 'unlock', message: t('unlock', { stage: t(stageLabelKey(fb.stage)) }) }
     }
     if (fb.correct) return { kind: 'correct', message: t('feedback.correct') }
+    const locale = i18n.resolvedLanguage ?? i18n.language
+    const primary = formatTimeLabel(fb.target, {
+      style: game.prompt.labelStyle,
+      period: game.prompt.period,
+      locale,
+    })
     const digits = timeToDigits(fb.target)
-    const phrase = formatTimePhrase(fb.target, i18n.resolvedLanguage ?? i18n.language)
-    const preferPhrase = game.prompt.labelStyle === 'phrase' && phrase !== digits
-    const timeLabel = preferPhrase ? `${phrase} (${digits})` : digits
+    const timeLabel = primary === digits ? digits : `${primary} (${digits})`
     return { kind: 'wrong', message: t('feedback.wrong', { time: timeLabel }) }
-  }, [game.feedback, game.prompt.labelStyle, t, i18n.resolvedLanguage, i18n.language])
+  }, [
+    game.feedback,
+    game.prompt.labelStyle,
+    game.prompt.period,
+    t,
+    i18n.resolvedLanguage,
+    i18n.language,
+  ])
 
   return {
     session: game.session,

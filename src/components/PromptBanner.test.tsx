@@ -12,7 +12,7 @@ describe('PromptBanner', () => {
   })
 
   it.each(['en', 'es', 'fr', 'it', 'de', 'pt', 'zh-CN'])(
-    'set prompt always includes digits (%s)',
+    'set prompt with digits style shows digital time (%s)',
     async (lng) => {
       await act(() => i18n.changeLanguage(lng))
       render(
@@ -23,6 +23,7 @@ describe('PromptBanner', () => {
               target: { hours: 4, minutes: 23 },
               snapStep: 1,
               labelStyle: 'digits',
+              period: 'am',
             }}
           />
         </ThemeProvider>,
@@ -42,12 +43,46 @@ describe('PromptBanner', () => {
             target: { hours: 5, minutes: 15 },
             snapStep: 15,
             labelStyle: 'phrase',
+            period: 'am',
           }}
         />
       </ThemeProvider>,
     )
     expect(screen.getByText(/a quarter past 5/i)).toBeInTheDocument()
     expect(screen.getByText('5:15')).toBeInTheDocument()
+  })
+
+  it('set prompt can use am/pm and midday', async () => {
+    await act(() => i18n.changeLanguage('en'))
+    const { rerender } = render(
+      <ThemeProvider theme={theme}>
+        <PromptBanner
+          prompt={{
+            kind: 'set',
+            target: { hours: 10, minutes: 0 },
+            snapStep: 60,
+            labelStyle: 'ampm',
+            period: 'pm',
+          }}
+        />
+      </ThemeProvider>,
+    )
+    expect(screen.getByText(/10pm/i)).toBeInTheDocument()
+
+    rerender(
+      <ThemeProvider theme={theme}>
+        <PromptBanner
+          prompt={{
+            kind: 'set',
+            target: { hours: 12, minutes: 0 },
+            snapStep: 60,
+            labelStyle: 'phrase',
+            period: 'pm',
+          }}
+        />
+      </ThemeProvider>,
+    )
+    expect(screen.getByText(/midday/i)).toBeInTheDocument()
   })
 
   it('syncs document lang on language change', async () => {
