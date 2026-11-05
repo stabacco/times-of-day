@@ -6,12 +6,13 @@ export const GlobalStyle = createGlobalStyle`
   }
 
   html, body, #root {
-    min-height: 100%;
+    height: 100%;
+    max-height: 100%;
+    overflow: hidden;
   }
 
   body {
     margin: 0;
-    min-height: 100vh;
     font-family: ${({ theme }) => theme.fonts.body};
     color: ${({ theme }) => theme.colors.ink};
     background: linear-gradient(

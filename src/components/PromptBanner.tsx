@@ -5,13 +5,19 @@ import type { Prompt } from '../game/types'
 
 const Banner = styled.div`
   margin: 0;
-  max-width: 720px;
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: 100%;
   text-align: center;
   font-family: ${({ theme }) => theme.fonts.display};
   font-weight: 600;
-  font-size: clamp(1.4rem, 5vw, 2.1rem);
-  line-height: 1.25;
+  font-size: clamp(1.05rem, 3.2vh, 1.75rem);
+  line-height: 1.2;
   color: ${({ theme }) => theme.colors.ink};
+
+  @media (max-height: 560px) {
+    font-size: clamp(0.95rem, 2.8vh, 1.25rem);
+  }
 `
 
 const Line = styled.p`
@@ -19,8 +25,8 @@ const Line = styled.p`
 `
 
 const Secondary = styled.p`
-  margin: 0.25rem 0 0;
-  font-size: 0.6em;
+  margin: 0.15rem 0 0;
+  font-size: 0.65em;
   font-weight: 500;
   opacity: 0.8;
 `

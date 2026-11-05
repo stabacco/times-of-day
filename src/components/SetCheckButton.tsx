@@ -2,16 +2,16 @@ import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
 
 const Button = styled.button`
-  min-width: 180px;
-  min-height: 56px;
-  padding: 0.5rem 2rem;
+  min-width: 140px;
+  min-height: 48px;
+  padding: 0.4rem 1.5rem;
   border: 3px solid ${({ theme }) => theme.colors.minuteHand};
   border-radius: ${({ theme }) => theme.radii.button};
   background: ${({ theme }) => theme.colors.mint};
   color: ${({ theme }) => theme.colors.ink};
   font-family: ${({ theme }) => theme.fonts.display};
   font-weight: 700;
-  font-size: 1.5rem;
+  font-size: clamp(1.15rem, 3.5vh, 1.4rem);
   cursor: pointer;
 
   &:hover:not(:disabled) {

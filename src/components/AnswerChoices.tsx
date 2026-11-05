@@ -20,23 +20,23 @@ type Outcome = 'correct' | 'wrong' | null
 
 const Grid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 100px), 1fr));
+  gap: 0.5rem;
   width: 100%;
   max-width: 100%;
 `
 
 const Choice = styled.button<{ $outcome: Outcome; $long: boolean }>`
-  min-height: 56px; /* >= 48px touch target */
-  padding: 0.5rem 0.75rem;
+  min-height: 48px;
+  padding: 0.35rem 0.6rem;
   border: 3px solid ${({ theme }) => theme.colors.clockRim};
   border-radius: ${({ theme }) => theme.radii.button};
   background: ${({ theme }) => theme.colors.white};
   color: ${({ theme }) => theme.colors.ink};
   font-family: ${({ theme }) => theme.fonts.display};
   font-weight: 700;
-  font-size: ${({ $long }) => ($long ? '1.15rem' : '1.75rem')};
-  line-height: 1.2;
+  font-size: ${({ $long }) => ($long ? '0.95rem' : 'clamp(1.1rem, 3.5vh, 1.5rem)')};
+  line-height: 1.15;
   font-variant-numeric: tabular-nums;
   cursor: pointer;
 
