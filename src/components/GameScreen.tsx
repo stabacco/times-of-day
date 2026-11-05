@@ -31,27 +31,49 @@ const LANGUAGES = SUPPORTED_LNGS.map((code) => ({
 const Shell = styled.main`
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 1.25rem;
+  align-items: stretch;
+  gap: 0.45rem;
   width: 100%;
   max-width: 480px;
+  height: 100vh;
+  height: 100dvh;
+  max-height: 100vh;
+  max-height: 100dvh;
   margin: 0 auto;
-  min-height: 100vh;
-  padding: 1rem 1rem 2.5rem;
+  padding: 0.45rem 0.75rem calc(0.45rem + env(safe-area-inset-bottom, 0px));
+  overflow: hidden;
+
+  @media (max-height: 560px) {
+    gap: 0.3rem;
+    padding: 0.3rem 0.5rem calc(0.3rem + env(safe-area-inset-bottom, 0px));
+  }
 `
 
 const PromptRow = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.75rem;
+  gap: 0.5rem;
+  flex: 0 0 auto;
+  width: 100%;
+  min-height: 0;
+`
+
+const ClockSlot = styled.div`
+  flex: 1 1 0;
+  min-height: 0;
+  min-width: 0;
+  display: grid;
+  place-items: center;
   width: 100%;
 `
 
 const Controls = styled.div`
   display: flex;
   justify-content: center;
+  flex: 0 0 auto;
   width: 100%;
+  min-height: 0;
 `
 
 function resolveLng(lng: string | undefined): string {
@@ -107,15 +129,17 @@ export function GameScreen() {
         />
         <PromptBanner prompt={prompt} />
       </PromptRow>
-      <ClockFace
-        time={clockTime}
-        interactive={isSet && !locked}
-        snapStep={prompt.snapStep}
-        hintHour={prompt.showHint ? normalizeTime(prompt.target).hours : null}
-        animateHands={!reducedMotion}
-        ariaLabel={!isSet && !locked ? t('a11y.clock') : undefined}
-        onChange={setDraftTime}
-      />
+      <ClockSlot>
+        <ClockFace
+          time={clockTime}
+          interactive={isSet && !locked}
+          snapStep={prompt.snapStep}
+          hintHour={prompt.showHint ? normalizeTime(prompt.target).hours : null}
+          animateHands={!reducedMotion}
+          ariaLabel={!isSet && !locked ? t('a11y.clock') : undefined}
+          onChange={setDraftTime}
+        />
+      </ClockSlot>
       <Controls>
         {isSet ? (
           <SetCheckButton disabled={locked} onCheck={checkSet} />

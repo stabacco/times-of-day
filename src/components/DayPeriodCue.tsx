@@ -25,14 +25,14 @@ const Wrap = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 3rem;
-  height: 3rem;
+  width: clamp(1.75rem, 5vh, 2.75rem);
+  height: clamp(1.75rem, 5vh, 2.75rem);
   flex-shrink: 0;
 `
 
 const Svg = styled.svg`
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 100%;
+  height: 100%;
   display: block;
 `
 

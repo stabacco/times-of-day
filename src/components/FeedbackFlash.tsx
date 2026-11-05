@@ -9,8 +9,10 @@ export interface FeedbackFlashProps {
 const Region = styled.div`
   display: flex;
   justify-content: center;
+  align-items: center;
+  flex: 0 0 auto;
   width: 100%;
-  min-height: 56px;
+  min-height: 44px;
 `
 
 const pop = keyframes`
@@ -32,7 +34,7 @@ const Star = styled.span<{ $animate: boolean }>`
 
 const Flash = styled.button<{ $kind: 'correct' | 'wrong' | 'unlock' }>`
   max-width: 100%;
-  padding: 0.6rem 1.5rem;
+  padding: 0.4rem 1.1rem;
   border: 3px solid
     ${({ theme, $kind }) => ($kind === 'wrong' ? theme.colors.hourHand : theme.colors.minuteHand)};
   border-radius: ${({ theme }) => theme.radii.pill};
@@ -40,7 +42,7 @@ const Flash = styled.button<{ $kind: 'correct' | 'wrong' | 'unlock' }>`
   color: ${({ theme }) => theme.colors.ink};
   font-family: ${({ theme }) => theme.fonts.display};
   font-weight: 700;
-  font-size: 1.25rem;
+  font-size: clamp(0.95rem, 2.8vh, 1.15rem);
   cursor: pointer;
 
   &:focus-visible {

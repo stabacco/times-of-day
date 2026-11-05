@@ -18,14 +18,15 @@ export interface ProgressStripProps {
 
 const Strip = styled.header`
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: center;
   justify-content: space-between;
-  gap: 0.75rem;
+  gap: 0.4rem;
+  flex: 0 0 auto;
   width: 100%;
   max-width: 720px;
   margin: 0 auto;
-  padding: 0.5rem 0.75rem;
+  padding: 0.3rem 0.5rem;
   background: ${({ theme }) => theme.colors.white};
   border: 2px solid ${({ theme }) => theme.colors.mint};
   border-radius: ${({ theme }) => theme.radii.pill};
@@ -45,15 +46,18 @@ const StageSelect = styled.select<{ $bloom: boolean }>`
     css`
       animation: ${bloomKeyframes} 0.6s ease-out;
     `}
-  min-height: 44px;
-  max-width: 11rem;
-  padding: 0.25rem 0.6rem;
+  min-height: 40px;
+  min-width: 0;
+  max-width: 9.5rem;
+  flex: 1 1 auto;
+  padding: 0.2rem 0.45rem;
   border: 2px solid ${({ theme }) => theme.colors.clockRim};
   border-radius: ${({ theme }) => theme.radii.pill};
   background: ${({ theme }) => theme.colors.mint};
   color: ${({ theme }) => theme.colors.ink};
   font-family: ${({ theme }) => theme.fonts.display};
   font-weight: 600;
+  font-size: 0.9rem;
   cursor: pointer;
 
   &:focus-visible {
@@ -65,29 +69,32 @@ const StageSelect = styled.select<{ $bloom: boolean }>`
 const Progress = styled.span`
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
+  gap: 0.25rem;
+  flex: 0 0 auto;
   font-family: ${({ theme }) => theme.fonts.display};
   font-weight: 600;
-  font-size: 1.1rem;
+  font-size: 0.95rem;
   color: ${({ theme }) => theme.colors.ink};
   font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 `
 
 const StarIcon = styled.span`
   color: ${({ theme }) => theme.colors.star};
-  font-size: 1.3rem;
+  font-size: 1.1rem;
 `
 
 const Controls = styled.div`
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.35rem;
+  flex: 0 0 auto;
 `
 
 const IconButton = styled.button`
-  min-width: 44px;
-  min-height: 44px;
-  padding: 0 0.9rem;
+  min-width: 40px;
+  min-height: 40px;
+  padding: 0 0.55rem;
   border: 2px solid ${({ theme }) => theme.colors.clockRim};
   border-radius: ${({ theme }) => theme.radii.button};
   background: ${({ theme }) => theme.colors.white};
@@ -106,13 +113,15 @@ const IconButton = styled.button`
 `
 
 const LangSelect = styled.select`
-  min-height: 44px;
-  padding: 0 0.6rem;
+  min-height: 40px;
+  max-width: 6.5rem;
+  padding: 0 0.35rem;
   border: 2px solid ${({ theme }) => theme.colors.clockRim};
   border-radius: ${({ theme }) => theme.radii.button};
   background: ${({ theme }) => theme.colors.white};
   color: ${({ theme }) => theme.colors.inkMuted};
   font-weight: 600;
+  font-size: 0.85rem;
   cursor: pointer;
 
   &:focus-visible {

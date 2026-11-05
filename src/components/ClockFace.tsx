@@ -96,11 +96,13 @@ function pickHand(clientX: number, clientY: number, rect: DOMRect, time: ClockTi
 }
 
 const Wrapper = styled.div`
-  width: 100%;
-  min-width: min(70vw, 320px);
-  max-width: 420px;
-  margin: 0 auto;
+  /* Square clock: grow with width, shrink when the slot is short. */
+  box-sizing: border-box;
+  width: min(100%, 420px);
+  max-height: 100%;
   aspect-ratio: 1;
+  height: auto;
+  margin: 0 auto;
 `
 
 const Svg = styled.svg<{ $interactive: boolean }>`
