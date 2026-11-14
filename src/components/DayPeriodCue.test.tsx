@@ -1,5 +1,14 @@
-import { describe, expect, it } from 'vitest'
-import { isNightGardenScene, periodCueKind, shouldShowPeriodCue } from './DayPeriodCue'
+import { beforeAll, describe, expect, it } from 'vitest'
+import { render } from '@testing-library/react'
+import { ThemeProvider } from 'styled-components'
+import { initI18n } from '../i18n'
+import { theme } from '../styles/theme'
+import {
+  DayPeriodCue,
+  isNightGardenScene,
+  periodCueKind,
+  shouldShowPeriodCue,
+} from './DayPeriodCue'
 
 describe('shouldShowPeriodCue', () => {
   it('shows for ampm labels', () => {
@@ -29,5 +38,23 @@ describe('isNightGardenScene', () => {
     expect(isNightGardenScene('phrase', 'am', { hours: 12, minutes: 0 })).toBe(true)
     expect(isNightGardenScene('ampm', 'am', { hours: 10, minutes: 0 })).toBe(false)
     expect(isNightGardenScene('digits', 'pm', { hours: 10, minutes: 0 })).toBe(false)
+  })
+})
+
+describe('DayPeriodCue layout', () => {
+  beforeAll(async () => {
+    await initI18n()
+  })
+
+  it('keeps a reserved slot when the cue is hidden', () => {
+    const { container } = render(
+      <ThemeProvider theme={theme}>
+        <DayPeriodCue period="am" time={{ hours: 3, minutes: 0 }} labelStyle="digits" />
+      </ThemeProvider>,
+    )
+    const slot = container.firstElementChild
+    expect(slot).toHaveAttribute('data-visible', 'false')
+    expect(slot).toHaveAttribute('aria-hidden', 'true')
+    expect(slot?.querySelector('svg')).toBeNull()
   })
 })

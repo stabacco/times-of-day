@@ -79,7 +79,8 @@ const Controls = styled.div`
   justify-content: center;
   flex: 0 0 auto;
   width: 100%;
-  min-height: 0;
+  /* Match choice / check button height so mode switches don't nudge the clock. */
+  min-height: 54px;
 `
 
 function resolveLng(lng: string | undefined): string {
@@ -135,14 +136,14 @@ export function GameScreen() {
         currentLng={resolveLng(i18n.resolvedLanguage ?? i18n.language)}
         onChangeLng={(code) => void i18n.changeLanguage(code)}
       />
-      <Brand />
+      <Brand night={nightGarden} />
       <PromptRow>
         <DayPeriodCue
           period={prompt.period}
           time={prompt.target}
           labelStyle={prompt.labelStyle}
         />
-        <PromptBanner prompt={prompt} />
+        <PromptBanner prompt={prompt} night={nightGarden} />
       </PromptRow>
       <ClockSlot>
         <GardenCritters night={nightGarden} />

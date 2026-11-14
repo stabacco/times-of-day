@@ -6,6 +6,9 @@ export const theme = {
     skyBottom: '#e4f4c8',
     ink: '#1e3d28',
     inkMuted: '#2d5a3d',
+    /** Light copy for Brand / prompts over the night garden. */
+    inkOnNight: '#f3f7ee',
+    inkOnNightMuted: '#d5e4d8',
     clockRim: '#4a9a62',
     clockFace: '#fffef8',
     hourHand: '#e07a3a',
