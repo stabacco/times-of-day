@@ -1,13 +1,7 @@
-import { GardenBackdrop } from './components/GardenBackdrop'
 import { GameScreen } from './components/GameScreen'
 
 function App() {
-  return (
-    <>
-      <GardenBackdrop />
-      <GameScreen />
-    </>
-  )
+  return <GameScreen />
 }
 
 export default App

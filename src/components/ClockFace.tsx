@@ -79,8 +79,11 @@ function angularDistance(a: number, b: number): number {
   return d > 180 ? 360 - d : d
 }
 
+/** Hands closer than this are treated as stacked (can't tell apart by angle alone). */
+const HAND_OVERLAP_DEG = 18
+
 /** Choose which hand a press should grab: minute-priority except near the short hour hand. */
-function pickHand(clientX: number, clientY: number, rect: DOMRect, time: ClockTime): Hand {
+export function pickHand(clientX: number, clientY: number, rect: DOMRect, time: ClockTime): Hand {
   const angle = pointerAngle(clientX, clientY, rect)
   const scale = VIEW / rect.width
   const dist =
@@ -88,9 +91,15 @@ function pickHand(clientX: number, clientY: number, rect: DOMRect, time: ClockTi
       clientX - (rect.left + rect.width / 2),
       clientY - (rect.top + rect.height / 2),
     ) * scale
-  const dm = angularDistance(angle, minutesToAngle(time.minutes))
-  const dh = angularDistance(angle, hoursToAngle(time.hours, time.minutes))
+  const minuteAngle = minutesToAngle(time.minutes)
+  const hourAngle = hoursToAngle(time.hours, time.minutes)
+  const dm = angularDistance(angle, minuteAngle)
+  const dh = angularDistance(angle, hourAngle)
+  // Beyond the short hand tip, only the minute hand reaches — always grab it.
   if (dist > HOUR_LEN + 8) return 'minute'
+  // When hands stack (e.g. 12:00), prefer the hour hand in the inner zone so
+  // hour-stage snaps still respond; the outer tip still grabs minutes above.
+  if (angularDistance(hourAngle, minuteAngle) < HAND_OVERLAP_DEG) return 'hour'
   // Minute-priority bias: hour only wins if clearly closer.
   return dh + 10 < dm ? 'hour' : 'minute'
 }
@@ -192,6 +201,10 @@ export function ClockFace({
     const hand = pickHand(e.clientX, e.clientY, rect, timeRef.current)
     draggingRef.current = hand
     setDragging(hand)
+    // Tap-to-place: jump the hand on press so trackpad users need not drag.
+    const next = pointerEventToTime(e.clientX, e.clientY, rect, snapStep, hand, timeRef.current)
+    timeRef.current = next
+    onChange?.(next)
     try {
       e.currentTarget.setPointerCapture?.(e.pointerId)
     } catch {

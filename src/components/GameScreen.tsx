@@ -6,10 +6,11 @@ import { normalizeTime } from '../clock/time'
 import { SUPPORTED_LNGS } from '../i18n'
 import { AnswerChoices } from './AnswerChoices'
 import { Brand } from './Brand'
-import { Butterflies } from './Butterflies'
+import { GardenCritters } from './GardenCritters'
 import { ClockFace } from './ClockFace'
-import { DayPeriodCue } from './DayPeriodCue'
+import { DayPeriodCue, isNightGardenScene } from './DayPeriodCue'
 import { FeedbackFlash } from './FeedbackFlash'
+import { GardenBackdrop } from './GardenBackdrop'
 import { PetalBurst } from './PetalBurst'
 import { ProgressStrip } from './ProgressStrip'
 import { PromptBanner } from './PromptBanner'
@@ -113,9 +114,16 @@ export function GameScreen() {
   const clockTime = isSet && !locked ? draftTime : prompt.target
   const celebrate =
     feedback?.kind === 'correct' || feedback?.kind === 'unlock' ? true : false
+  const nightGarden = isNightGardenScene(
+    prompt.labelStyle,
+    prompt.period,
+    prompt.target,
+  )
 
   return (
-    <Shell>
+    <>
+      <GardenBackdrop night={nightGarden} />
+      <Shell>
       <ProgressStrip
         stage={session.stage}
         starsInStage={session.starsInStage}
@@ -137,7 +145,7 @@ export function GameScreen() {
         <PromptBanner prompt={prompt} />
       </PromptRow>
       <ClockSlot>
-        <Butterflies />
+        <GardenCritters night={nightGarden} />
         <PetalBurst active={celebrate} />
         <ClockFace
           time={clockTime}
@@ -166,5 +174,6 @@ export function GameScreen() {
       </Controls>
       <FeedbackFlash feedback={feedback} onDismiss={dismissFeedbackAndContinue} />
     </Shell>
+    </>
   )
 }

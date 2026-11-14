@@ -9,5 +9,9 @@ export default defineConfig({
     environment: 'happy-dom',
     globals: true,
     setupFiles: './src/test/setup.ts',
+    testTimeout: 15000,
+    pool: 'threads',
+    maxWorkers: 2,
+    fileParallelism: false,
   },
 })

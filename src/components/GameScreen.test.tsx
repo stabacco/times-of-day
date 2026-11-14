@@ -7,6 +7,9 @@ import { theme } from '../styles/theme'
 import { GameScreen } from './GameScreen'
 
 vi.mock('../audio/sfx', () => ({ playSfx: vi.fn() }))
+vi.mock('./GardenBackdrop', () => ({ GardenBackdrop: () => null }))
+vi.mock('./GardenCritters', () => ({ GardenCritters: () => null }))
+vi.mock('./PetalBurst', () => ({ PetalBurst: () => null }))
 
 describe('GameScreen', () => {
   beforeAll(async () => {

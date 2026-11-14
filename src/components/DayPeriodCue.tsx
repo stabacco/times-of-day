@@ -21,6 +21,15 @@ export function periodCueKind(period: DayPeriod, time: ClockTime): CueKind {
   return period === 'am' ? 'sun' : 'moon'
 }
 
+/** Night garden only when the sun/moon cue is teaching evening or midnight. */
+export function isNightGardenScene(
+  labelStyle: TimeLabelStyle,
+  period: DayPeriod,
+  time: ClockTime,
+): boolean {
+  return shouldShowPeriodCue(labelStyle, time) && periodCueKind(period, time) === 'moon'
+}
+
 const Wrap = styled.div`
   display: flex;
   justify-content: center;

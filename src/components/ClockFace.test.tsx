@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest'
 import { fireEvent, render, screen } from '@testing-library/react'
 import { ThemeProvider } from 'styled-components'
-import { ClockFace, pointerEventToTime } from './ClockFace'
+import { ClockFace, pickHand, pointerEventToTime } from './ClockFace'
 import { theme } from '../styles/theme'
 
 const rect = {
@@ -103,6 +103,22 @@ describe('pointerEventToTime', () => {
   })
 })
 
+describe('pickHand', () => {
+  it('prefers the hour hand in the inner zone when both sit on midday', () => {
+    // 12:00 — both hands at 0°. Grab midway along the short hour hand (up from center).
+    expect(pickHand(100, 70, rect, { hours: 12, minutes: 0 })).toBe('hour')
+  })
+
+  it('still grabs the minute tip beyond the short hand when stacked at midday', () => {
+    expect(pickHand(100, 25, rect, { hours: 12, minutes: 0 })).toBe('minute')
+  })
+
+  it('keeps minute-priority when hands are apart', () => {
+    // 3:00 — minute at top; pressing near 12 still picks minute
+    expect(pickHand(100, 25, rect, { hours: 3, minutes: 0 })).toBe('minute')
+  })
+})
+
 function renderFace(props: Partial<React.ComponentProps<typeof ClockFace>> = {}) {
   const onChange = vi.fn()
   const utils = render(
@@ -162,6 +178,16 @@ describe('ClockFace', () => {
     expect(onChange).not.toHaveBeenCalled()
   })
 
+  it('tap on the dial places the hand without needing a drag', () => {
+    const { onChange } = renderFace({ interactive: true })
+    const svg = screen.getByRole('img')
+    svg.getBoundingClientRect = () => rect
+    // Tap near the rim at 6 — minute tip zone — should jump to :30 on pointerDown alone
+    fireEvent.pointerDown(svg, { clientX: 100, clientY: 200, pointerId: 1 })
+    expect(onChange).toHaveBeenCalledTimes(1)
+    expect(onChange).toHaveBeenCalledWith({ hours: 3, minutes: 30 })
+  })
+
   it('drag on minute hand calls onChange toward 3:30 when interactive', () => {
     const { onChange } = renderFace({ interactive: true })
     const svg = screen.getByRole('img')
@@ -181,6 +207,20 @@ describe('ClockFace', () => {
     fireEvent.pointerDown(svg, { clientX: 135, clientY: 100, pointerId: 1 })
     fireEvent.pointerMove(svg, { clientX: 0, clientY: 100, pointerId: 1 })
     expect(onChange).toHaveBeenLastCalledWith({ hours: 9, minutes: 0 })
+  })
+
+  it('at 12:00, dragging the stacked hands with hour snap moves the hour', () => {
+    const { onChange } = renderFace({
+      interactive: true,
+      time: { hours: 12, minutes: 0 },
+      snapStep: 60,
+    })
+    const svg = screen.getByRole('img')
+    svg.getBoundingClientRect = () => rect
+    // Grab inner stacked hands (would previously lock onto minute + snap-60 no-op)
+    fireEvent.pointerDown(svg, { clientX: 100, clientY: 70, pointerId: 1 })
+    fireEvent.pointerMove(svg, { clientX: 200, clientY: 100, pointerId: 1 })
+    expect(onChange).toHaveBeenLastCalledWith({ hours: 3, minutes: 0 })
   })
 
   it('disables hand transition while dragging', () => {
