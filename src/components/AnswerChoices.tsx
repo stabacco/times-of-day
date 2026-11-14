@@ -31,7 +31,8 @@ const Choice = styled.button<{ $outcome: Outcome; $long: boolean }>`
   padding: 0.35rem 0.6rem;
   border: 3px solid ${({ theme }) => theme.colors.clockRim};
   border-radius: ${({ theme }) => theme.radii.button};
-  background: ${({ theme }) => theme.colors.white};
+  background: ${({ theme }) => theme.colors.clockFace};
+  box-shadow: 0 3px 0 ${({ theme }) => theme.colors.mint};
   color: ${({ theme }) => theme.colors.ink};
   font-family: ${({ theme }) => theme.fonts.display};
   font-weight: 700;
