@@ -105,15 +105,21 @@ export function pickHand(clientX: number, clientY: number, rect: DOMRect, time: 
 }
 
 const Wrapper = styled.div`
-  /* Square clock: grow with width, shrink when the slot is short. */
+  /* Square clock: prefer the shorter slot axis once container queries apply. */
   position: relative;
   box-sizing: border-box;
   width: min(100%, 420px);
+  max-width: 100%;
   max-height: 100%;
   aspect-ratio: 1;
   height: auto;
   margin: 0 auto;
   z-index: 1;
+
+  @supports (width: 1cqh) {
+    width: min(100%, 420px, 100cqh);
+    max-height: none;
+  }
 
   &::before {
     content: '';

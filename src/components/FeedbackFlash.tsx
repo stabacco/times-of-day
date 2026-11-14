@@ -12,7 +12,9 @@ const Region = styled.div`
   align-items: center;
   flex: 0 0 auto;
   width: 100%;
-  min-height: 44px;
+  /* Fixed band so correct/wrong/unlock flash never resizes the clock slot. */
+  height: 3.1rem;
+  min-height: 3.1rem;
 `
 
 const pop = keyframes`
@@ -34,7 +36,8 @@ const Star = styled.span<{ $animate: boolean }>`
 
 const Flash = styled.button<{ $kind: 'correct' | 'wrong' | 'unlock' }>`
   max-width: 100%;
-  padding: 0.4rem 1.1rem;
+  max-height: 100%;
+  padding: 0.3rem 1rem;
   border: 3px solid
     ${({ theme, $kind }) => ($kind === 'wrong' ? theme.colors.hourHand : theme.colors.minuteHand)};
   border-radius: ${({ theme }) => theme.radii.pill};
@@ -42,7 +45,11 @@ const Flash = styled.button<{ $kind: 'correct' | 'wrong' | 'unlock' }>`
   color: ${({ theme }) => theme.colors.ink};
   font-family: ${({ theme }) => theme.fonts.display};
   font-weight: 700;
-  font-size: clamp(0.95rem, 2.8vh, 1.15rem);
+  font-size: clamp(0.9rem, 2.6vh, 1.1rem);
+  line-height: 1.15;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   cursor: pointer;
 
   &:focus-visible {

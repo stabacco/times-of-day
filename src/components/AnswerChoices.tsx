@@ -18,17 +18,20 @@ export interface AnswerChoicesProps {
 
 type Outcome = 'correct' | 'wrong' | null
 
-const Grid = styled.div`
+const Grid = styled.div<{ $count: number }>`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 100px), 1fr));
-  gap: 0.5rem;
+  grid-template-columns: repeat(${({ $count }) => $count}, minmax(0, 1fr));
+  gap: 0.45rem;
   width: 100%;
   max-width: 100%;
+  height: 100%;
+  align-items: stretch;
 `
 
 const Choice = styled.button<{ $outcome: Outcome; $long: boolean }>`
-  min-height: 48px;
-  padding: 0.35rem 0.6rem;
+  height: 100%;
+  min-height: 0;
+  padding: 0.25rem 0.4rem;
   border: 3px solid ${({ theme }) => theme.colors.clockRim};
   border-radius: ${({ theme }) => theme.radii.button};
   background: ${({ theme }) => theme.colors.clockFace};
@@ -36,9 +39,12 @@ const Choice = styled.button<{ $outcome: Outcome; $long: boolean }>`
   color: ${({ theme }) => theme.colors.ink};
   font-family: ${({ theme }) => theme.fonts.display};
   font-weight: 700;
-  font-size: ${({ $long }) => ($long ? '0.95rem' : 'clamp(1.1rem, 3.5vh, 1.5rem)')};
-  line-height: 1.15;
+  font-size: ${({ $long }) => ($long ? '0.82rem' : 'clamp(0.95rem, 3vh, 1.35rem)')};
+  line-height: 1.1;
   font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   cursor: pointer;
 
   &:hover:not(:disabled) {
@@ -83,7 +89,7 @@ export function AnswerChoices({
   const locale = i18n.resolvedLanguage ?? i18n.language
 
   return (
-    <Grid>
+    <Grid $count={Math.max(options.length, 1)}>
       {options.map((option) => {
         const digits = timeToDigits(option)
         const label = formatTimeLabel(option, { style: labelStyle, period, locale })

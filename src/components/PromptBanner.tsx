@@ -8,13 +8,16 @@ const Banner = styled.div<{ $night: boolean }>`
   flex: 1 1 auto;
   min-width: 0;
   max-width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
   text-align: center;
   font-family: ${({ theme }) => theme.fonts.display};
   font-weight: 600;
   font-size: clamp(1.05rem, 3.2vh, 1.75rem);
   line-height: 1.2;
-  /* Reserve two lines so secondary labels don't shove the clock. */
-  min-height: calc(1.2em + 0.15rem + 0.65em * 1.2);
   color: ${({ theme, $night }) =>
     $night ? theme.colors.inkOnNight : theme.colors.ink};
   text-shadow: ${({ $night }) =>

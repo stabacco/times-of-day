@@ -4,12 +4,19 @@ import { useTranslation } from 'react-i18next'
 const Wordmark = styled.h1<{ $night: boolean }>`
   margin: 0;
   flex: 0 0 auto;
+  /* One-line band so locale wordmarks can't shove the dial. */
+  height: clamp(1.7rem, 5vh, 2.9rem);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-family: ${({ theme }) => theme.fonts.display};
   font-weight: 700;
   font-size: clamp(1.5rem, 4.5vh, 2.75rem);
-  line-height: 1.05;
+  line-height: 1;
   letter-spacing: 0.01em;
   text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
   color: ${({ theme, $night }) =>
     $night ? theme.colors.inkOnNight : theme.colors.ink};
   text-shadow: ${({ theme, $night }) =>

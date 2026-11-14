@@ -3,15 +3,16 @@ import { useTranslation } from 'react-i18next'
 
 const Button = styled.button`
   min-width: 140px;
-  min-height: 48px;
-  padding: 0.4rem 1.5rem;
+  height: 100%;
+  min-height: 0;
+  padding: 0.25rem 1.5rem;
   border: 3px solid ${({ theme }) => theme.colors.minuteHand};
   border-radius: ${({ theme }) => theme.radii.button};
   background: ${({ theme }) => theme.colors.mint};
   color: ${({ theme }) => theme.colors.ink};
   font-family: ${({ theme }) => theme.fonts.display};
   font-weight: 700;
-  font-size: clamp(1.15rem, 3.5vh, 1.4rem);
+  font-size: clamp(1.05rem, 3.2vh, 1.35rem);
   cursor: pointer;
 
   &:hover:not(:disabled) {

@@ -61,7 +61,9 @@ const PromptRow = styled.div`
   gap: 0.5rem;
   flex: 0 0 auto;
   width: 100%;
-  min-height: 0;
+  /* Fixed band: cue + up to two prompt lines — keeps the clock slot steady. */
+  height: clamp(3.6rem, 9.5vh, 5.1rem);
+  min-height: clamp(3.6rem, 9.5vh, 5.1rem);
 `
 
 const ClockSlot = styled.div`
@@ -72,15 +74,18 @@ const ClockSlot = styled.div`
   display: grid;
   place-items: center;
   width: 100%;
+  container-type: size;
 `
 
 const Controls = styled.div`
   display: flex;
   justify-content: center;
+  align-items: center;
   flex: 0 0 auto;
   width: 100%;
-  /* Match choice / check button height so mode switches don't nudge the clock. */
-  min-height: 54px;
+  /* Fixed band for check button or one row of choices. */
+  height: 3.35rem;
+  min-height: 3.35rem;
 `
 
 function resolveLng(lng: string | undefined): string {
