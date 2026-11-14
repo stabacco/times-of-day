@@ -17,11 +17,18 @@ export const GlobalStyle = createGlobalStyle`
     color: ${({ theme }) => theme.colors.ink};
     background: linear-gradient(
       180deg,
-      ${({ theme }) => theme.colors.bgTop} 0%,
+      ${({ theme }) => theme.colors.skyTop} 0%,
+      ${({ theme }) => theme.colors.bgTop} 42%,
+      ${({ theme }) => theme.colors.skyBottom} 72%,
       ${({ theme }) => theme.colors.bgBottom} 100%
     );
     background-attachment: fixed;
     -webkit-font-smoothing: antialiased;
+  }
+
+  #root {
+    position: relative;
+    isolation: isolate;
   }
 
   button, select {

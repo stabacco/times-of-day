@@ -27,9 +27,10 @@ const Strip = styled.header`
   max-width: 720px;
   margin: 0 auto;
   padding: 0.3rem 0.5rem;
-  background: ${({ theme }) => theme.colors.white};
-  border: 2px solid ${({ theme }) => theme.colors.mint};
+  background: ${({ theme }) => theme.colors.clockFace};
+  border: 2px solid ${({ theme }) => theme.colors.hillFar};
   border-radius: ${({ theme }) => theme.radii.pill};
+  box-shadow: 0 2px 0 ${({ theme }) => theme.colors.mint};
   font-family: ${({ theme }) => theme.fonts.body};
   color: ${({ theme }) => theme.colors.inkMuted};
 `

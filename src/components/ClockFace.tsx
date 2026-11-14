@@ -97,12 +97,37 @@ function pickHand(clientX: number, clientY: number, rect: DOMRect, time: ClockTi
 
 const Wrapper = styled.div`
   /* Square clock: grow with width, shrink when the slot is short. */
+  position: relative;
   box-sizing: border-box;
   width: min(100%, 420px);
   max-height: 100%;
   aspect-ratio: 1;
   height: auto;
   margin: 0 auto;
+  z-index: 1;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 4%;
+    border-radius: 50%;
+    background: radial-gradient(
+      circle,
+      ${({ theme }) => theme.colors.meadow} 0%,
+      ${({ theme }) => theme.colors.mint} 55%,
+      transparent 72%
+    );
+    z-index: -1;
+    pointer-events: none;
+  }
+`
+
+const MeadowBloom = styled.svg`
+  position: absolute;
+  width: 14%;
+  height: 14%;
+  pointer-events: none;
+  z-index: 0;
 `
 
 const Svg = styled.svg<{ $interactive: boolean }>`
@@ -196,8 +221,36 @@ export function ClockFace({
 
   const ticks = Array.from({ length: 12 }, (_, i) => i)
 
+  const blooms: { x: string; y: string; petal: string }[] = [
+    { x: '6%', y: '10%', petal: colors.flowerPink },
+    { x: '78%', y: '8%', petal: colors.flowerYellow },
+    { x: '82%', y: '72%', petal: colors.flowerCoral },
+  ]
+
   return (
     <Wrapper>
+      {blooms.map((b) => (
+        <MeadowBloom
+          key={`${b.x}-${b.y}`}
+          viewBox="0 0 24 24"
+          style={{ left: b.x, top: b.y }}
+          aria-hidden="true"
+        >
+          {[0, 72, 144, 216, 288].map((deg) => {
+            const rad = ((deg - 90) * Math.PI) / 180
+            return (
+              <circle
+                key={deg}
+                cx={12 + Math.cos(rad) * 5}
+                cy={12 + Math.sin(rad) * 5}
+                r={3.2}
+                fill={b.petal}
+              />
+            )
+          })}
+          <circle cx={12} cy={12} r={2.6} fill={colors.flowerCenter} />
+        </MeadowBloom>
+      ))}
       <Svg
         ref={svgRef}
         viewBox={`0 0 ${VIEW} ${VIEW}`}
@@ -210,17 +263,26 @@ export function ClockFace({
         onPointerUp={endDrag}
         onPointerCancel={endDrag}
       >
-        <circle cx={C} cy={C} r={FACE_R} fill={colors.clockFace} stroke={colors.clockRim} strokeWidth={6} />
+        <circle cx={C} cy={C} r={FACE_R + 3} fill={colors.mint} opacity={0.55} />
+        <circle
+          cx={C}
+          cy={C}
+          r={FACE_R}
+          fill={colors.clockFace}
+          stroke={colors.clockRim}
+          strokeWidth={8}
+        />
+        <circle cx={C} cy={C} r={FACE_R - 5} fill="none" stroke={colors.meadow} strokeWidth={3} />
         {ticks.map((i) => (
           <line
             key={i}
             data-tick
             x1={C}
-            y1={C - FACE_R + 4}
+            y1={C - FACE_R + 5}
             x2={C}
-            y2={C - FACE_R + 12}
+            y2={C - FACE_R + 14}
             stroke={colors.clockRim}
-            strokeWidth={3}
+            strokeWidth={3.5}
             strokeLinecap="round"
             transform={`rotate(${i * 30} ${C} ${C})`}
           />

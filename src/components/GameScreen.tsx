@@ -6,9 +6,11 @@ import { normalizeTime } from '../clock/time'
 import { SUPPORTED_LNGS } from '../i18n'
 import { AnswerChoices } from './AnswerChoices'
 import { Brand } from './Brand'
+import { Butterflies } from './Butterflies'
 import { ClockFace } from './ClockFace'
 import { DayPeriodCue } from './DayPeriodCue'
 import { FeedbackFlash } from './FeedbackFlash'
+import { PetalBurst } from './PetalBurst'
 import { ProgressStrip } from './ProgressStrip'
 import { PromptBanner } from './PromptBanner'
 import { SetCheckButton } from './SetCheckButton'
@@ -29,6 +31,8 @@ const LANGUAGES = SUPPORTED_LNGS.map((code) => ({
 }))
 
 const Shell = styled.main`
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -60,6 +64,7 @@ const PromptRow = styled.div`
 `
 
 const ClockSlot = styled.div`
+  position: relative;
   flex: 1 1 0;
   min-height: 0;
   min-width: 0;
@@ -106,6 +111,8 @@ export function GameScreen() {
   // Read mode shows the target on the clock; set mode shows the player's hands,
   // revealing the answer once feedback appears.
   const clockTime = isSet && !locked ? draftTime : prompt.target
+  const celebrate =
+    feedback?.kind === 'correct' || feedback?.kind === 'unlock' ? true : false
 
   return (
     <Shell>
@@ -130,6 +137,8 @@ export function GameScreen() {
         <PromptBanner prompt={prompt} />
       </PromptRow>
       <ClockSlot>
+        <Butterflies />
+        <PetalBurst active={celebrate} />
         <ClockFace
           time={clockTime}
           interactive={isSet && !locked}
